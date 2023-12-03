@@ -1,3 +1,13 @@
 {
-  "item.testmod.topaz": "Topaz"
+
+  "item.testmod.topaz": "Topaz",
+
+  "item.testmod.topaz_helmet": "Topaz Helmet",
+  "item.testmod.topaz_chestplate": "Topaz Chestplate",
+  "item.testmod.topaz_leggings": "Topaz Leggings",
+  "item.testmod.topaz_boots": "Topaz Boots",
+
+  "block.testmod.topaz_block": "Block of Topaz",
+
+  "itemgroup.topaz": "Topaz Items"
 }
