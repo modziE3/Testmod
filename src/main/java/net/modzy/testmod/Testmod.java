@@ -2,7 +2,12 @@ package net.modzy.testmod;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.modzy.testmod.block.ModBlocks;
+import net.modzy.testmod.entity.ModEntities;
+import net.modzy.testmod.entity.client.MirandaRenderer;
+import net.modzy.testmod.entity.custom.MirandaEntity;
 import net.modzy.testmod.item.ModItemGroups;
 import net.modzy.testmod.item.ModItems;
 import org.slf4j.Logger;
@@ -18,5 +23,8 @@ public class Testmod implements ModInitializer {
 		ModItemGroups.registerItemGroups();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+		ModEntities.registerModEntities();
+		EntityRendererRegistry.register(ModEntities.MIRANDA, MirandaRenderer::new);
+		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
 	}
 }

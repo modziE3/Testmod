@@ -10,11 +10,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
+import net.modzy.testmod.entity.ModEntities;
 
 public class ModItems {
 
     //  Items ... Topaz added as example
     public static final Item TOPAZ = registerItem("topaz", new Item(new FabricItemSettings()));
+    public static final Item MIRANDA_SPAWN_EGG = registerItem("miranda_spawn_egg",
+            new SpawnEggItem(ModEntities.MIRANDA, 0xB05716, 0x219358, new FabricItemSettings()));
 
     //  Tools ... Topaz pickaxe, axe and so on
 
