@@ -4,12 +4,14 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.modzy.testmod.entity.client.MirandaModel;
 import net.modzy.testmod.entity.client.ModModelLayers;
+import net.modzy.testmod.networking.ModPackets;
 
 public class TestmodClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.MIRANDA, MirandaModel::getTexturedModelData);
+        ModPackets.registerS2CPackets();
 
     }
 }

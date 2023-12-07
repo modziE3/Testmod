@@ -8,8 +8,6 @@ import java.util.Random;
 
 public class ModAnimations {
 
-	public static Animation DUCK_IDLE;
-
 	//region DUCK_WADDLE
 	public static final Animation DUCK_WADDLE = Animation.Builder.create(1f).looping()
 			.addBoneAnimation("LeftLeg",
@@ -256,19 +254,5 @@ public class ModAnimations {
 									Transformation.Interpolations.LINEAR))).build();
 	//endregion
 
-	//  DuckIdleChooseRandom
-	public static void AnimationRandomChoose() {
-		Random randomNum = new Random();
-		int result = randomNum.nextInt(2);
-		if(result==0) {
-			DUCK_IDLE = DUCK_IDLE_1;
-		} else {
-			DUCK_IDLE = DUCK_IDLE_2;
-		}
-	}
-
-	public static void main() {
-		System.out.println(DUCK_IDLE==null);
-	}
 }
 

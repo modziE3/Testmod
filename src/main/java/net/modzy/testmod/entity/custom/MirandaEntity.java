@@ -5,35 +5,63 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 import net.modzy.testmod.entity.ModEntities;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public class MirandaEntity extends AnimalEntity {
-    public final AnimationState idleAnimationState = new AnimationState();
+    public final AnimationState idle1AnimationState = new AnimationState();
+    public final AnimationState idle2AnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+    public String gender;
 
     public MirandaEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
+        this.gender = getRandomGender();
+    }
+
+    private String getRandomGender() {
+        Random random = new Random();
+        String[] genders = {"Male", "Female"};
+        return genders[random.nextInt(genders.length)];
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        if (nbt.contains("Gender", 8)) {
+            this.gender = nbt.getString("Gender");
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putString("Gender", this.gender);
     }
 
     private void setupAnimationStates() {
         if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(40) + 80;
-            this.idleAnimationState.start(this.age);
+            Random randomNum = new Random();
+            int result = randomNum.nextInt(2);
+            if(result==0) {
+                this.idle1AnimationState.start(this.age);
+            } else {
+                this.idle2AnimationState.start(this.age);
+            }
         } else {
             --this.idleAnimationTimeout;
         }

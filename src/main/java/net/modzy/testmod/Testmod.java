@@ -10,6 +10,7 @@ import net.modzy.testmod.entity.client.MirandaRenderer;
 import net.modzy.testmod.entity.custom.MirandaEntity;
 import net.modzy.testmod.item.ModItemGroups;
 import net.modzy.testmod.item.ModItems;
+import net.modzy.testmod.networking.ModPackets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,5 +27,6 @@ public class Testmod implements ModInitializer {
 		ModEntities.registerModEntities();
 		EntityRendererRegistry.register(ModEntities.MIRANDA, MirandaRenderer::new);
 		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
+		ModPackets.registerC2SPackets();
 	}
 }

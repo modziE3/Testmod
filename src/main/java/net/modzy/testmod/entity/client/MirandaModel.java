@@ -2,6 +2,7 @@ package net.modzy.testmod.entity.client;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.modzy.testmod.entity.animation.ModAnimations;
 import net.modzy.testmod.entity.custom.MirandaEntity;
+
+import java.util.Random;
 
 public class MirandaModel<T extends MirandaEntity> extends SinglePartEntityModel<T> {
 	private final ModelPart miranda;
@@ -62,13 +65,15 @@ public class MirandaModel<T extends MirandaEntity> extends SinglePartEntityModel
 				.uv(17, 15).cuboid(-2.0F, 3.0F, -2.0F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -3.0F, -2.0F));
 		return TexturedModelData.of(modelData, 32, 32);
 	}
+
 	@Override
 	public void setAngles(MirandaEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
 		this.setHeadAngles(netHeadYaw, headPitch);
 
 		this.animateMovement(ModAnimations.DUCK_WADDLE, limbSwing, limbSwingAmount, 2f, 2.5f);
-		this.updateAnimation(entity.idleAnimationState, ModAnimations.DUCK_IDLE_2, ageInTicks, 1f);
+		this.updateAnimation(entity.idle1AnimationState, ModAnimations.DUCK_IDLE_1, ageInTicks, 1f);
+		this.updateAnimation(entity.idle2AnimationState, ModAnimations.DUCK_IDLE_2, ageInTicks, 1f);
 	}
 
 	private void setHeadAngles(float headYaw, float headPitch) {

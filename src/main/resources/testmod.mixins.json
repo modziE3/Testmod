@@ -3,6 +3,9 @@
 	"package": "net.modzy.testmod.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"ModEntityDataSaver"
+	],
+	"client": [
 		"ExampleMixin"
 	],
 	"injectors": {
