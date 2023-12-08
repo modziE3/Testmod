@@ -12,7 +12,6 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
@@ -21,35 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class MirandaEntity extends AnimalEntity {
+public class MirandaEntity extends GenderedEntity {
     public final AnimationState idle1AnimationState = new AnimationState();
     public final AnimationState idle2AnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
-    public String gender;
 
-    public MirandaEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    public MirandaEntity(EntityType<? extends GenderedEntity> entityType, World world) {
         super(entityType, world);
-        this.gender = getRandomGender();
-    }
-
-    private String getRandomGender() {
-        Random random = new Random();
-        String[] genders = {"Male", "Female"};
-        return genders[random.nextInt(genders.length)];
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("Gender", 8)) {
-            this.gender = nbt.getString("Gender");
-        }
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        nbt.putString("Gender", this.gender);
     }
 
     private void setupAnimationStates() {
