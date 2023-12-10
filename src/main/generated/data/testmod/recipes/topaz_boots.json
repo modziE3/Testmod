@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "item": "testmod:topaz"
+    }
+  },
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "result": {
+    "item": "testmod:topaz_boots"
+  },
+  "show_notification": true
+}

@@ -1,7 +1,6 @@
 package net.modzy.testmod;
 
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.modzy.testmod.block.ModBlocks;
@@ -18,6 +17,7 @@ public class Testmod implements ModInitializer {
 	public static final String MOD_ID = "testmod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+
 	@Override
 	public void onInitialize() {
 
@@ -28,5 +28,6 @@ public class Testmod implements ModInitializer {
 		EntityRendererRegistry.register(ModEntities.MIRANDA, MirandaRenderer::new);
 		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
 		ModPackets.registerC2SPackets();
+
 	}
 }
