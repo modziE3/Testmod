@@ -1,4 +1,7 @@
 {
   "replace": false,
-  "values": []
+  "values": [
+    "testmod:martian_silt_block",
+    "testmod:martian_silt"
+  ]
 }

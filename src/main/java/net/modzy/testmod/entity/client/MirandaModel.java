@@ -21,6 +21,7 @@ public class MirandaModel<T extends MirandaEntity> extends SinglePartEntityModel
 		this.miranda = root.getChild("miranda");
 		this.Head = root.getChild("miranda").getChild("body").getChild("Base").getChild("Neck").getChild("Head");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "testmod:nautiverde_shell",
+    "minecraft:nautilus_shell"
+  ]
+}

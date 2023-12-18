@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": {
+      "item": "minecraft:heart_of_the_sea"
+    },
+    "X": {
+      "tag": "testmod:shells"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XOX",
+    "XXX"
+  ],
+  "result": {
+    "item": "minecraft:conduit"
+  },
+  "show_notification": true
+}

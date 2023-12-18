@@ -2,10 +2,10 @@ package net.modzy.testmod.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.Models;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.data.client.*;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.item.ModItems;
@@ -20,6 +20,10 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TOPAZ_BLOCK);
+        registerDustTypeBlock(blockStateModelGenerator, ModBlocks.MARTIAN_SILT_BLOCK, ModBlocks.MARTIAN_SILT);
+        registerDustTypeBlock(blockStateModelGenerator, ModBlocks.LUNAR_SILT_BLOCK, ModBlocks.LUNAR_SILT);
+
+
     }
 
     @Override
@@ -30,8 +34,20 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.TOPAZ_HELMET, Models.GENERATED);
         itemModelGenerator.register(ModItems.TOPAZ_LEGGINGS, Models.GENERATED);
 
+        itemModelGenerator.register(ModItems.NAUTIVERDE_SHELL, Models.GENERATED);
+
         itemModelGenerator.register(ModItems.MIRANDA_SPAWN_EGG,
                 new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty()));
+        itemModelGenerator.register(ModItems.NAUTIVERDE_SPAWN_EGG,
+                new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty()));
 
+    }
+
+    public void registerDustTypeBlock(BlockStateModelGenerator blockStateModelGenerator, Block allBlock, Block shortBlock) {
+        TextureMap textureMap = TextureMap.all(shortBlock);
+        Identifier identifier = Models.CUBE_ALL.upload(allBlock, textureMap, blockStateModelGenerator.modelCollector);
+        blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(shortBlock).coordinate(BlockStateVariantMap.create(Properties.LAYERS).register(height -> BlockStateVariant.create().put(VariantSettings.MODEL, height < 8 ? ModelIds.getBlockSubModelId(shortBlock, "_height" + height * 2) : identifier))));
+        blockStateModelGenerator.registerParentedItemModel(shortBlock, ModelIds.getBlockSubModelId(shortBlock, "_height2"));
+        blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(allBlock, identifier));
     }
 }

@@ -23,6 +23,8 @@ public class MirandaEntity extends GenderedEntity {
     public final AnimationState idle1AnimationState = new AnimationState();
     public final AnimationState idle2AnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+    private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, Items.TORCHFLOWER_SEEDS, Items.PITCHER_POD);
+
 
     public MirandaEntity(EntityType<? extends GenderedEntity> entityType, World world) {
         super(entityType, world);
@@ -78,7 +80,7 @@ public class MirandaEntity extends GenderedEntity {
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
-        return stack.isOf(Items.BEETROOT_SEEDS);
+        return BREEDING_INGREDIENT.test(stack);
     }
 
     @Nullable

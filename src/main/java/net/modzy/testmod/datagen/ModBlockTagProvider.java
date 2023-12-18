@@ -25,7 +25,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE);
 
-        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE);
+        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+                .add(ModBlocks.MARTIAN_SILT_BLOCK)
+                .add(ModBlocks.MARTIAN_SILT);
 
         getOrCreateTagBuilder(BlockTags.HOE_MINEABLE);
         //endregion

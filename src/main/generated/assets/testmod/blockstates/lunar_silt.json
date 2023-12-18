@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "testmod:block/lunar_silt_height2"
+    },
+    "layers=2": {
+      "model": "testmod:block/lunar_silt_height4"
+    },
+    "layers=3": {
+      "model": "testmod:block/lunar_silt_height6"
+    },
+    "layers=4": {
+      "model": "testmod:block/lunar_silt_height8"
+    },
+    "layers=5": {
+      "model": "testmod:block/lunar_silt_height10"
+    },
+    "layers=6": {
+      "model": "testmod:block/lunar_silt_height12"
+    },
+    "layers=7": {
+      "model": "testmod:block/lunar_silt_height14"
+    },
+    "layers=8": {
+      "model": "testmod:block/lunar_silt_block"
+    }
+  }
+}

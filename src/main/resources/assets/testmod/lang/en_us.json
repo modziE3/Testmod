@@ -1,5 +1,8 @@
 {
   "item.testmod.topaz": "Topaz",
+  "item.testmod.nautiverde_shell": "Nautiverde Shell",
+  "item.testmod.miranda_spawn_egg": "Paradise Duck Spawn Egg",
+  "item.testmod.nautiverde_spawn_egg": "Nautiverde Spawn Egg",
 
   "item.testmod.topaz_helmet": "Topaz Helmet",
   "item.testmod.topaz_chestplate": "Topaz Chestplate",
@@ -7,6 +10,9 @@
   "item.testmod.topaz_boots": "Topaz Boots",
 
   "block.testmod.topaz_block": "Block of Topaz",
+  "block.testmod.martian_silt_block": "Martian Silt",
+  "block.testmod.martian_silt": "Martian Dust Pile",
 
+  "itemgroup.animal_group": "Animal Items",
   "itemgroup.topaz": "Topaz Items"
 }

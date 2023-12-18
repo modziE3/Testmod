@@ -9,6 +9,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
 import net.modzy.testmod.entity.custom.MirandaEntity;
+import net.modzy.testmod.entity.custom.NautiverdeEntity;
 
 public class ModEntities {
 
@@ -20,4 +21,9 @@ public class ModEntities {
             new Identifier(Testmod.MOD_ID, "miranda"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MirandaEntity::new)
                     .dimensions(EntityDimensions.fixed(0.7f, 0.4f)).build());
+
+    public static final EntityType<NautiverdeEntity> NAUTIVERDE = Registry.register(Registries.ENTITY_TYPE,
+            new Identifier(Testmod.MOD_ID, "nautiverde"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, NautiverdeEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.9f)).build());
 }

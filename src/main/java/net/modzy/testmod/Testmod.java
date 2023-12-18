@@ -1,12 +1,11 @@
 package net.modzy.testmod;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.entity.ModEntities;
-import net.modzy.testmod.entity.client.MirandaRenderer;
 import net.modzy.testmod.entity.custom.MirandaEntity;
+import net.modzy.testmod.entity.custom.NautiverdeEntity;
 import net.modzy.testmod.item.ModItemGroups;
 import net.modzy.testmod.item.ModItems;
 import net.modzy.testmod.networking.ModPackets;
@@ -25,8 +24,10 @@ public class Testmod implements ModInitializer {
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 		ModEntities.registerModEntities();
-		EntityRendererRegistry.register(ModEntities.MIRANDA, MirandaRenderer::new);
+
 		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.NAUTIVERDE, NautiverdeEntity.createNautiverdeAttributes());
+
 		ModPackets.registerC2SPackets();
 
 	}

@@ -12,6 +12,7 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.item.ModItems;
+import net.modzy.testmod.util.ModTags;
 
 public class ModRecipeProvider extends FabricRecipeProvider {
     public ModRecipeProvider(FabricDataOutput output) {
@@ -31,6 +32,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerSimpleArmorRecipe(exporter, RecipeCategory.COMBAT, ModItems.TOPAZ_CHESTPLATE, "chestplate", ModItems.TOPAZ);
         offerSimpleArmorRecipe(exporter, RecipeCategory.COMBAT, ModItems.TOPAZ_LEGGINGS, "leggings", ModItems.TOPAZ);
         offerSimpleArmorRecipe(exporter, RecipeCategory.COMBAT, ModItems.TOPAZ_BOOTS, "boots", ModItems.TOPAZ);
+
+        //  Conduit With Nautiverde Shell and Nautilus shell
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, Items.CONDUIT)
+                .input(Character.valueOf('X'), ModTags.Items.SHELLS)
+                .input(Character.valueOf('O'), Items.HEART_OF_THE_SEA)
+                .pattern("XXX")
+                .pattern("XOX")
+                .pattern("XXX")
+                .criterion(hasItem(ModItems.NAUTIVERDE_SHELL), conditionsFromItem(ModItems.NAUTIVERDE_SHELL))
+                .criterion(hasItem(Items.NAUTILUS_SHELL), conditionsFromItem(Items.NAUTILUS_SHELL))
+                .criterion(hasItem(Items.HEART_OF_THE_SEA), conditionsFromItem(Items.HEART_OF_THE_SEA))
+                .offerTo(exporter, new Identifier(getRecipeName(Items.CONDUIT)));
 
 
     }

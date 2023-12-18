@@ -7,4 +7,6 @@ import net.modzy.testmod.Testmod;
 public class ModModelLayers {
     public static final EntityModelLayer MIRANDA =
             new EntityModelLayer(new Identifier(Testmod.MOD_ID, "miranda"), "main");
+    public static final EntityModelLayer NAUTIVERDE =
+            new EntityModelLayer(new Identifier(Testmod.MOD_ID, "nautiverde"), "main");
 }

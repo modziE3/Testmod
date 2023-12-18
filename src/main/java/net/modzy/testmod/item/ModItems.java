@@ -17,8 +17,11 @@ public class ModItems {
 
     //  Items ... Topaz added as example
     public static final Item TOPAZ = registerItem("topaz", new Item(new FabricItemSettings()));
+    public static final Item NAUTIVERDE_SHELL = registerItem("nautiverde_shell", new Item(new FabricItemSettings()));
     public static final Item MIRANDA_SPAWN_EGG = registerItem("miranda_spawn_egg",
             new SpawnEggItem(ModEntities.MIRANDA, 0xB05716, 0x219358, new FabricItemSettings()));
+    public static final Item NAUTIVERDE_SPAWN_EGG = registerItem("nautiverde_spawn_egg",
+            new SpawnEggItem(ModEntities.NAUTIVERDE, 0xa8b02a, 0xd2b64f, new FabricItemSettings()));
 
     //  Tools ... Topaz pickaxe, axe and so on
 
