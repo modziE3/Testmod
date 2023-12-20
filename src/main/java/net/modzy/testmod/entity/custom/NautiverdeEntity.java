@@ -1,13 +1,11 @@
 package net.modzy.testmod.entity.custom;
 
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.control.AquaticMoveControl;
 import net.minecraft.entity.ai.control.YawAdjustingLookControl;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.ai.pathing.SwimNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -23,16 +21,11 @@ import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.StructureTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -41,8 +34,8 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public class NautiverdeEntity
@@ -52,12 +45,12 @@ public class NautiverdeEntity
     private static final TrackedData<Boolean> HAS_FISH = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> MOISTNESS = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.INTEGER);
     static final TargetPredicate CLOSE_PLAYER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0).ignoreVisibility();
-    public static final int MAX_AIR = 4800;
-    private static final int MAX_MOISTNESS = 2400;
     public static final Predicate<ItemEntity> CAN_TAKE = item -> !item.cannotPickup() && item.isAlive() && item.isTouchingWater();
+    public static final AnimationState hidingAnimationState = new AnimationState();
+    public static final float MIN_HIDE_HEALTH = 10.0f;
 
     public NautiverdeEntity(EntityType<? extends NautiverdeEntity> entityType, World world) {
-        super((EntityType<? extends WaterCreatureEntity>)entityType, world);
+        super(entityType, world);
         this.moveControl = new AquaticMoveControl(this, 85, 10, 0.01f, 0.1f, true);
         this.lookControl = new YawAdjustingLookControl(this, 10);
         this.setCanPickUpLoot(true);
@@ -69,11 +62,6 @@ public class NautiverdeEntity
         this.setAir(this.getMaxAir());
         this.setPitch(0.0f);
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
-    }
-
-    @Override
-    public boolean canBreatheInWater() {
-        return false;
     }
 
     @Override
@@ -135,22 +123,20 @@ public class NautiverdeEntity
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new BreatheAirGoal(this));
         this.goalSelector.add(0, new MoveIntoWaterGoal(this));
-        this.goalSelector.add(1, new LeadToNearbyTreasureGoal(this));
-        this.goalSelector.add(2, new SwimWithPlayerGoal(this, 4.0));
+        this.goalSelector.add(2, new HideGoal(this));
         this.goalSelector.add(4, new SwimAroundGoal(this, 1.0, 10));
         this.goalSelector.add(4, new LookAroundGoal(this));
-        this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
         this.goalSelector.add(6, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.add(8, new PlayWithItemsGoal());
-        this.goalSelector.add(8, new ChaseBoatGoal(this));
-        this.goalSelector.add(9, new FleeEntityGoal<GuardianEntity>(this, GuardianEntity.class, 8.0f, 1.0, 1.0));
-        this.targetSelector.add(1, new RevengeGoal(this, GuardianEntity.class).setGroupRevenge(new Class[0]));
+        this.targetSelector.add(1, new RevengeGoal(this, PlayerEntity.class).setGroupRevenge(new Class[0]));
     }
 
     public static DefaultAttributeContainer.Builder createNautiverdeAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.2f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0);
+        return MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.2f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0);
     }
 
     @Override
@@ -180,7 +166,7 @@ public class NautiverdeEntity
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return 0.3f;
+        return 0.4f;
     }
 
     @Override
@@ -255,35 +241,39 @@ public class NautiverdeEntity
     @Override
     public void handleStatus(byte status) {
         if (status == EntityStatuses.ADD_DOLPHIN_HAPPY_VILLAGER_PARTICLES) {
-            this.spawnParticlesAround(ParticleTypes.HAPPY_VILLAGER);
+            this.spawnParticlesAround();
         } else {
             super.handleStatus(status);
         }
     }
 
-    private void spawnParticlesAround(ParticleEffect parameters) {
+    private void spawnParticlesAround() {
         for (int i = 0; i < 7; ++i) {
             double d = this.random.nextGaussian() * 0.01;
             double e = this.random.nextGaussian() * 0.01;
             double f = this.random.nextGaussian() * 0.01;
-            this.getWorld().addParticle(parameters, this.getParticleX(1.0), this.getRandomBodyY() + 0.2, this.getParticleZ(1.0), d, e, f);
+            this.getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getParticleX(1.0), this.getRandomBodyY() + 0.2, this.getParticleZ(1.0), d, e, f);
         }
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        if (!itemStack.isEmpty() && itemStack.isIn(ItemTags.FISHES)) {
-            if (!this.getWorld().isClient) {
-                this.playSound(SoundEvents.ENTITY_DOLPHIN_EAT, 1.0f, 1.0f);
-            }
-            this.setHasFish(true);
-            if (!player.getAbilities().creativeMode) {
-                itemStack.decrement(1);
-            }
-            return ActionResult.success(this.getWorld().isClient);
+    public boolean damage(DamageSource source, float amount) {
+        if (source.isIn(DamageTypeTags.IS_PROJECTILE)) {
+            this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 0.5f, 2.0f);
+            return false;
         }
-        return super.interactMob(player, hand);
+        if (source.getAttacker()!=null && source.getAttacker().isPlayer()) {
+            PlayerEntity player = (PlayerEntity) source.getAttacker();
+            ItemStack heldItem = player.getMainHandStack();
+            if (this.getHealth() < MIN_HIDE_HEALTH && !heldItem.isEmpty() && heldItem.isIn(ItemTags.TOOLS)) {
+                heldItem.damage(50, player, entity -> entity.sendToolBreakStatus(player.getActiveHand()));
+                this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 1, 1);
+            } else if (!player.isCreative() && (heldItem.isEmpty() || !heldItem.isIn(ItemTags.TOOLS))) {
+                this.playSound(SoundEvents.BLOCK_STONE_BREAK, 0.85f, 1.0f);
+                return false;
+            }
+        }
+        return super.damage(source, amount);
     }
 
     @Override
@@ -313,14 +303,6 @@ public class NautiverdeEntity
         return SoundEvents.ENTITY_DOLPHIN_SWIM;
     }
 
-    protected boolean isNearTarget() {
-        BlockPos blockPos = this.getNavigation().getTargetPos();
-        if (blockPos != null) {
-            return blockPos.isWithinDistance(this.getPos(), 12.0);
-        }
-        return false;
-    }
-
     @Override
     public void travel(Vec3d movementInput) {
         if (this.canMoveVoluntarily() && this.isTouchingWater()) {
@@ -335,138 +317,47 @@ public class NautiverdeEntity
         }
     }
 
-    @Override
-    public boolean canBeLeashedBy(PlayerEntity player) {
-        return true;
-    }
-
-    static class LeadToNearbyTreasureGoal
+    static class HideGoal
             extends Goal {
-        private final NautiverdeEntity dolphin;
-        private boolean noPathToStructure;
-
-        LeadToNearbyTreasureGoal(NautiverdeEntity dolphin) {
-            this.dolphin = dolphin;
-            this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
-        }
-
-        @Override
-        public boolean canStop() {
-            return false;
-        }
-
-        @Override
-        public boolean canStart() {
-            return this.dolphin.hasFish() && this.dolphin.getAir() >= 100;
-        }
-
-        @Override
-        public boolean shouldContinue() {
-            BlockPos blockPos = this.dolphin.getTreasurePos();
-            return !BlockPos.ofFloored(blockPos.getX(), this.dolphin.getY(), blockPos.getZ()).isWithinDistance(this.dolphin.getPos(), 4.0) && !this.noPathToStructure && this.dolphin.getAir() >= 100;
-        }
-
-        @Override
-        public void start() {
-            if (!(this.dolphin.getWorld() instanceof ServerWorld)) {
-                return;
-            }
-            ServerWorld serverWorld = (ServerWorld)this.dolphin.getWorld();
-            this.noPathToStructure = false;
-            this.dolphin.getNavigation().stop();
-            BlockPos blockPos = this.dolphin.getBlockPos();
-            BlockPos blockPos2 = serverWorld.locateStructure(StructureTags.DOLPHIN_LOCATED, blockPos, 50, false);
-            if (blockPos2 == null) {
-                this.noPathToStructure = true;
-                return;
-            }
-            this.dolphin.setTreasurePos(blockPos2);
-            serverWorld.sendEntityStatus(this.dolphin, EntityStatuses.ADD_DOLPHIN_HAPPY_VILLAGER_PARTICLES);
-        }
-
-        @Override
-        public void stop() {
-            BlockPos blockPos = this.dolphin.getTreasurePos();
-            if (BlockPos.ofFloored(blockPos.getX(), this.dolphin.getY(), blockPos.getZ()).isWithinDistance(this.dolphin.getPos(), 4.0) || this.noPathToStructure) {
-                this.dolphin.setHasFish(false);
-            }
-        }
-
-        @Override
-        public void tick() {
-            World world = this.dolphin.getWorld();
-            if (this.dolphin.isNearTarget() || this.dolphin.getNavigation().isIdle()) {
-                BlockPos blockPos;
-                Vec3d vec3d = Vec3d.ofCenter(this.dolphin.getTreasurePos());
-                Vec3d vec3d2 = NoPenaltyTargeting.findTo(this.dolphin, 16, 1, vec3d, 0.3926991f);
-                if (vec3d2 == null) {
-                    vec3d2 = NoPenaltyTargeting.findTo(this.dolphin, 8, 4, vec3d, 1.5707963705062866);
-                }
-                if (!(vec3d2 == null || world.getFluidState(blockPos = BlockPos.ofFloored(vec3d2)).isIn(FluidTags.WATER) && world.getBlockState(blockPos).canPathfindThrough(world, blockPos, NavigationType.WATER))) {
-                    vec3d2 = NoPenaltyTargeting.findTo(this.dolphin, 8, 5, vec3d, 1.5707963705062866);
-                }
-                if (vec3d2 == null) {
-                    this.noPathToStructure = true;
-                    return;
-                }
-                this.dolphin.getLookControl().lookAt(vec3d2.x, vec3d2.y, vec3d2.z, this.dolphin.getMaxHeadRotation() + 20, this.dolphin.getMaxLookPitchChange());
-                this.dolphin.getNavigation().startMovingTo(vec3d2.x, vec3d2.y, vec3d2.z, 1.3);
-                if (world.random.nextInt(this.getTickCount(80)) == 0) {
-                    world.sendEntityStatus(this.dolphin, EntityStatuses.ADD_DOLPHIN_HAPPY_VILLAGER_PARTICLES);
-                }
-            }
-        }
-    }
-
-    static class SwimWithPlayerGoal
-            extends Goal {
-        private final NautiverdeEntity dolphin;
-        private final double speed;
+        private final NautiverdeEntity nautiverde;
         @Nullable
         private PlayerEntity closestPlayer;
 
-        SwimWithPlayerGoal(NautiverdeEntity dolphin, double speed) {
-            this.dolphin = dolphin;
-            this.speed = speed;
-            this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+        HideGoal(NautiverdeEntity nautiverde) {
+            this.nautiverde = nautiverde;
         }
 
         @Override
         public boolean canStart() {
-            this.closestPlayer = this.dolphin.getWorld().getClosestPlayer(CLOSE_PLAYER_PREDICATE, this.dolphin);
+            this.closestPlayer = this.nautiverde.getWorld().getClosestPlayer(CLOSE_PLAYER_PREDICATE, this.nautiverde);
             if (this.closestPlayer == null) {
                 return false;
             }
-            return this.closestPlayer.isSwimming() && this.dolphin.getTarget() != this.closestPlayer;
+            return this.nautiverde.getHealth() <= MIN_HIDE_HEALTH;
         }
 
         @Override
         public boolean shouldContinue() {
-            return this.closestPlayer != null && this.closestPlayer.isSwimming() && this.dolphin.squaredDistanceTo(this.closestPlayer) < 256.0;
-        }
-
-        @Override
-        public void start() {
-            this.closestPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 100), this.dolphin);
-        }
-
-        @Override
-        public void stop() {
-            this.closestPlayer = null;
-            this.dolphin.getNavigation().stop();
+            return this.closestPlayer != null && this.nautiverde.getHealth() <= MIN_HIDE_HEALTH && this.nautiverde.squaredDistanceTo(this.closestPlayer) < 2500.0;
         }
 
         @Override
         public void tick() {
-            this.dolphin.getLookControl().lookAt(this.closestPlayer, this.dolphin.getMaxHeadRotation() + 20, this.dolphin.getMaxLookPitchChange());
-            if (this.dolphin.squaredDistanceTo(this.closestPlayer) < 6.25) {
-                this.dolphin.getNavigation().stop();
-            } else {
-                this.dolphin.getNavigation().startMovingTo(this.closestPlayer, this.speed);
-            }
-            if (this.closestPlayer.isSwimming() && this.closestPlayer.getWorld().random.nextInt(6) == 0) {
-                this.closestPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 100), this.dolphin);
-            }
+            this.nautiverde.getLookControl();
+            this.nautiverde.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 3, false, false, false));
+            this.nautiverde.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 10, 10000, false, false, false));
+        }
+
+        @Override
+        public void start() {
+            hidingAnimationState.start(this.nautiverde.age);
+        }
+
+        @Override
+        public void stop() {
+            hidingAnimationState.stop();
+            this.closestPlayer = null;
+            this.nautiverde.clearStatusEffects();
         }
     }
 

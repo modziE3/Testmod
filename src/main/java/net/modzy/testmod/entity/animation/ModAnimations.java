@@ -649,4 +649,30 @@ public class ModAnimations {
 							new Keyframe(3f, AnimationHelper.createRotationalVector(0f, 0f, -6.89f),
 									Transformation.Interpolations.LINEAR))).build();
 	//endregion
+
+	//region NAUTIVERDE_HIDE
+	public static final Animation NAUTIVERDE_HIDE = Animation.Builder.create(1f)
+			.addBoneAnimation("LeftTentacle",
+					new Transformation(Transformation.Targets.SCALE,
+							new Keyframe(0f, AnimationHelper.createScalingVector(1f, 1f, 1f),
+									Transformation.Interpolations.CUBIC),
+							new Keyframe(0.9583434f, AnimationHelper.createScalingVector(1f, 1f, 0f),
+									Transformation.Interpolations.CUBIC),
+							new Keyframe(1f, AnimationHelper.createScalingVector(1f, 0f, 0f),
+									Transformation.Interpolations.CUBIC)))
+			.addBoneAnimation("RightTentacle",
+					new Transformation(Transformation.Targets.SCALE,
+							new Keyframe(0f, AnimationHelper.createScalingVector(1f, 1f, 1f),
+									Transformation.Interpolations.CUBIC),
+							new Keyframe(0.7916766f, AnimationHelper.createScalingVector(1f, 1f, 0f),
+									Transformation.Interpolations.CUBIC),
+							new Keyframe(1f, AnimationHelper.createScalingVector(1f, 0f, 0f),
+									Transformation.Interpolations.CUBIC)))
+			.addBoneAnimation("Face",
+					new Transformation(Transformation.Targets.ROTATE,
+							new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+									Transformation.Interpolations.CUBIC),
+							new Keyframe(1f, AnimationHelper.createRotationalVector(27.5f, 0f, 0f),
+									Transformation.Interpolations.LINEAR))).build();
+	//endregion
 }
