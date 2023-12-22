@@ -132,7 +132,7 @@ public class NautiverdeModel<T extends NautiverdeEntity> extends SinglePartEntit
 
 		this.animateMovement(ModAnimations.NAUTIVERDE_SWIM, limbAngle, limbDistance, 2f, 2.5f);
 		this.updateAnimation(entity.hidingAnimationState, ModAnimations.NAUTIVERDE_HIDE, animationProgress, 1f);
-
+		this.updateAnimation(entity.attackAnimationState, ModAnimations.NAUTIVERDE_ATTACK, animationProgress, 1f);
 	}
 
 	private void setHeadAngles(float headYaw, float headPitch) {

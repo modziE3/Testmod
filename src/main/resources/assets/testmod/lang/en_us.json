@@ -14,5 +14,7 @@
   "block.testmod.martian_silt": "Martian Dust Pile",
 
   "itemgroup.animal_group": "Animal Items",
-  "itemgroup.topaz": "Topaz Items"
+  "itemgroup.topaz": "Topaz Items",
+
+  "sounds.testmod.entity_nautiverde_ambient": "Nautiverde Ambient Noise"
 }

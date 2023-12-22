@@ -9,6 +9,7 @@ import net.modzy.testmod.entity.custom.NautiverdeEntity;
 import net.modzy.testmod.item.ModItemGroups;
 import net.modzy.testmod.item.ModItems;
 import net.modzy.testmod.networking.ModPackets;
+import net.modzy.testmod.sound.ModSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class Testmod implements ModInitializer {
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 		ModEntities.registerModEntities();
+		ModSounds.registerSounds();
 
 		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.NAUTIVERDE, NautiverdeEntity.createNautiverdeAttributes());

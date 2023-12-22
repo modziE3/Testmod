@@ -1,0 +1,10 @@
+{
+  "entity_nautiverde_ambient": {
+    "subtitle": "sounds.testmod.entity_nautiverde_ambient",
+    "sounds": [
+      "testmod:nautiverde_ambient_1",
+      "testmod:nautiverde_ambient_2",
+      "testmod:nautiverde_ambient_3"
+    ]
+  }
+}

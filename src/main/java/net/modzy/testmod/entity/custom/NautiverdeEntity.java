@@ -15,8 +15,8 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.GuardianEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -26,33 +26,38 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.modzy.testmod.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 public class NautiverdeEntity
         extends WaterCreatureEntity {
 
-    private static final TrackedData<BlockPos> TREASURE_POS = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
-    private static final TrackedData<Boolean> HAS_FISH = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> MOISTNESS = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> ATTACKING = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> HIDING = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     static final TargetPredicate CLOSE_PLAYER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0).ignoreVisibility();
     public static final Predicate<ItemEntity> CAN_TAKE = item -> !item.cannotPickup() && item.isAlive() && item.isTouchingWater();
-    public static final AnimationState hidingAnimationState = new AnimationState();
+    public final AnimationState attackAnimationState = new AnimationState();
+    public final AnimationState hidingAnimationState = new AnimationState();
+    public int attackAnimationTimeout = 0;
+    public boolean canStartHiding = true;
     public static final float MIN_HIDE_HEALTH = 10.0f;
 
     public NautiverdeEntity(EntityType<? extends NautiverdeEntity> entityType, World world) {
         super(entityType, world);
-        this.moveControl = new AquaticMoveControl(this, 85, 10, 0.01f, 0.1f, true);
-        this.lookControl = new YawAdjustingLookControl(this, 10);
+        this.moveControl = new AquaticMoveControl(this, 85, 40, 0.01f, 0.1f, false);
+        this.lookControl = new YawAdjustingLookControl(this, 7);
         this.setCanPickUpLoot(true);
     }
 
@@ -68,20 +73,37 @@ public class NautiverdeEntity
     protected void tickWaterBreathingAir(int air) {
     }
 
-    public void setTreasurePos(BlockPos treasurePos) {
-        this.dataTracker.set(TREASURE_POS, treasurePos);
+    @Override
+    public void onPlayerCollision(PlayerEntity player) {
+        this.setVelocity(this.getVelocity().multiply(0.5));
+        super.onPlayerCollision(player);
     }
 
-    public BlockPos getTreasurePos() {
-        return this.dataTracker.get(TREASURE_POS);
+    private void setupAnimationStates() {
+        if (this.isAttacking() && this.attackAnimationTimeout <= 0) {
+            this.attackAnimationTimeout = 40;
+            this.attackAnimationState.start(this.age);
+        } else {
+            --this.attackAnimationTimeout;
+        }
+        if (!this.isAttacking()) {
+            this.attackAnimationState.stop();
+        }
+
+        if (this.isHiding() && this.canStartHiding) {
+            this.hidingAnimationState.start(this.age);
+            this.canStartHiding = false;
+        }
+        if (!this.isHiding() && !this.canStartHiding) {
+            this.hidingAnimationState.stop();
+            this.canStartHiding = true;
+        }
     }
 
-    public boolean hasFish() {
-        return this.dataTracker.get(HAS_FISH);
-    }
-
-    public void setHasFish(boolean hasFish) {
-        this.dataTracker.set(HAS_FISH, hasFish);
+    @Override
+    protected void updateLimbs(float posDelta) {
+        float f = this.getPose() == EntityPose.STANDING ? Math.min(posDelta * 6.0f, 1.0f) : 0.0f;
+        this.limbAnimator.updateLimbs(f, 0.2f);
     }
 
     public int getMoistness() {
@@ -92,76 +114,63 @@ public class NautiverdeEntity
         this.dataTracker.set(MOISTNESS, moistness);
     }
 
+    public boolean isAttacking() {
+        return this.dataTracker.get(ATTACKING);
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.dataTracker.set(ATTACKING, attacking);
+    }
+
+    public boolean isHiding() {
+        return this.dataTracker.get(HIDING);
+    }
+
+    public void setHiding(boolean hiding) {
+        this.dataTracker.set(HIDING, hiding);
+    }
+
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(TREASURE_POS, BlockPos.ORIGIN);
-        this.dataTracker.startTracking(HAS_FISH, false);
+        this.dataTracker.startTracking(ATTACKING, false);
+        this.dataTracker.startTracking(HIDING, false);
         this.dataTracker.startTracking(MOISTNESS, 2400);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putInt("TreasurePosX", this.getTreasurePos().getX());
-        nbt.putInt("TreasurePosY", this.getTreasurePos().getY());
-        nbt.putInt("TreasurePosZ", this.getTreasurePos().getZ());
-        nbt.putBoolean("GotFish", this.hasFish());
         nbt.putInt("Moistness", this.getMoistness());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        int i = nbt.getInt("TreasurePosX");
-        int j = nbt.getInt("TreasurePosY");
-        int k = nbt.getInt("TreasurePosZ");
-        this.setTreasurePos(new BlockPos(i, j, k));
         super.readCustomDataFromNbt(nbt);
-        this.setHasFish(nbt.getBoolean("GotFish"));
         this.setMoistness(nbt.getInt("Moistness"));
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new MoveIntoWaterGoal(this));
-        this.goalSelector.add(2, new HideGoal(this));
-        this.goalSelector.add(4, new SwimAroundGoal(this, 1.0, 10));
-        this.goalSelector.add(4, new LookAroundGoal(this));
-        this.goalSelector.add(6, new MeleeAttackGoal(this, 1.2f, true));
-        this.goalSelector.add(8, new PlayWithItemsGoal());
-        this.targetSelector.add(1, new RevengeGoal(this, PlayerEntity.class).setGroupRevenge(new Class[0]));
+        this.goalSelector.add(1, new HideGoal(this));
+        this.goalSelector.add(2, new AttackGoal(this, 2f, true));
+        this.goalSelector.add(4, new NautiverdeSwimAroundGoal(this, 1.0, 10));
+        this.goalSelector.add(4, new NautiverdeLookAroundGoal(this));
+        this.targetSelector.add(1, new RevengeGoal(this));
     }
 
     public static DefaultAttributeContainer.Builder createNautiverdeAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.2f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 50.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.5f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 3.0);
     }
 
     @Override
     protected EntityNavigation createNavigation(World world) {
         return new SwimNavigation(this, world);
-    }
-
-    @Override
-    public boolean tryAttack(Entity target) {
-        boolean bl = target.damage(this.getDamageSources().mobAttack(this), (int)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
-        if (bl) {
-            this.applyDamageEffects(this, target);
-            this.playSound(SoundEvents.ENTITY_DOLPHIN_ATTACK, 1.0f, 1.0f);
-        }
-        return bl;
-    }
-
-    @Override
-    public int getMaxAir() {
-        return 4800;
-    }
-
-    @Override
-    protected int getNextAirOnLand(int air) {
-        return this.getMaxAir();
     }
 
     @Override
@@ -208,6 +217,9 @@ public class NautiverdeEntity
     @Override
     public void tick() {
         super.tick();
+        if(this.getWorld().isClient()) {
+            setupAnimationStates();
+        }
         if (this.isAiDisabled()) {
             this.setAir(this.getMaxAir());
             return;
@@ -278,19 +290,19 @@ public class NautiverdeEntity
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_DOLPHIN_HURT;
+        return SoundEvents.ENTITY_CAT_HURT;
     }
 
     @Override
     @Nullable
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_DOLPHIN_DEATH;
+        return SoundEvents.ENTITY_CAT_DEATH;
     }
 
     @Override
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return this.isTouchingWater() ? SoundEvents.ENTITY_DOLPHIN_AMBIENT_WATER : SoundEvents.ENTITY_DOLPHIN_AMBIENT;
+        return ModSounds.ENTITY_NAUTIVERDE_AMBIENT;
     }
 
     @Override
@@ -310,7 +322,7 @@ public class NautiverdeEntity
             this.move(MovementType.SELF, this.getVelocity());
             this.setVelocity(this.getVelocity().multiply(0.9));
             if (this.getTarget() == null) {
-                this.setVelocity(this.getVelocity().add(0.0, -0.005, 0.0));
+                this.setVelocity(this.getVelocity().add(0.0, 0.0, 0.0));
             }
         } else {
             super.travel(movementInput);
@@ -343,85 +355,152 @@ public class NautiverdeEntity
 
         @Override
         public void tick() {
-            this.nautiverde.getLookControl();
-            this.nautiverde.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 3, false, false, false));
-            this.nautiverde.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 10, 10000, false, false, false));
+            super.tick();
+            this.nautiverde.setTarget(null);
         }
 
         @Override
         public void start() {
-            hidingAnimationState.start(this.nautiverde.age);
+            super.start();
+            this.nautiverde.setHiding(true);
+            this.nautiverde.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000, 3, false, false, false));
         }
 
         @Override
         public void stop() {
-            hidingAnimationState.stop();
+            this.nautiverde.setHiding(false);
             this.closestPlayer = null;
             this.nautiverde.clearStatusEffects();
+            super.stop();
         }
     }
 
-    class PlayWithItemsGoal
-            extends Goal {
-        private int nextPlayingTime;
+    static class AttackGoal
+            extends MeleeAttackGoal {
+        private final NautiverdeEntity nautiverde;
+        private int startDelay = 20;
+        private int nextDelay = 20;
+        private boolean shouldCountTillNextAttack = false;
 
-        PlayWithItemsGoal() {
+        public AttackGoal(PathAwareEntity mob, double speed, boolean pauseWhenMobIdle) {
+            super(mob, speed, pauseWhenMobIdle);
+            nautiverde = (NautiverdeEntity) mob;
+            this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
         }
 
         @Override
         public boolean canStart() {
-            if (this.nextPlayingTime > NautiverdeEntity.this.age) {
-                return false;
-            }
-            List<ItemEntity> list = NautiverdeEntity.this.getWorld().getEntitiesByClass(ItemEntity.class, NautiverdeEntity.this.getBoundingBox().expand(8.0, 8.0, 8.0), CAN_TAKE);
-            return !list.isEmpty() || !NautiverdeEntity.this.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty();
+            return super.canStart() && !this.nautiverde.isHiding();
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return super.shouldContinue() && !this.nautiverde.isHiding();
         }
 
         @Override
         public void start() {
-            List<ItemEntity> list = NautiverdeEntity.this.getWorld().getEntitiesByClass(ItemEntity.class, NautiverdeEntity.this.getBoundingBox().expand(8.0, 8.0, 8.0), CAN_TAKE);
-            if (!list.isEmpty()) {
-                NautiverdeEntity.this.getNavigation().startMovingTo(list.get(0), 1.2f);
-                NautiverdeEntity.this.playSound(SoundEvents.ENTITY_DOLPHIN_PLAY, 1.0f, 1.0f);
-            }
-            this.nextPlayingTime = 0;
+            super.start();
+            startDelay = 20;
+            nextDelay = 20;
         }
 
         @Override
-        public void stop() {
-            ItemStack itemStack = NautiverdeEntity.this.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (!itemStack.isEmpty()) {
-                this.spitOutItem(itemStack);
-                NautiverdeEntity.this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                this.nextPlayingTime = NautiverdeEntity.this.age + NautiverdeEntity.this.random.nextInt(100);
+        protected void attack(LivingEntity Enemy) {
+            if (isEnemyWithinAttackDistance(Enemy)) {
+                this.shouldCountTillNextAttack = true;
+
+                if(isTimeToStartAttackAnimation()) {
+                    this.nautiverde.setAttacking(true);
+                }
+                if(isTimeToAttack()) {
+                    this.mob.getLookControl().lookAt(Enemy.getX(), Enemy.getEyeY(), Enemy.getZ());
+                    performAttack(Enemy);
+                    Vec3d direction = Enemy.getPos().subtract(this.nautiverde.getPos()).normalize();
+                    this.nautiverde.setVelocity(direction.x, direction.y, direction.z);
+                }
+            } else {
+                resetAttackCooldown();
+                shouldCountTillNextAttack = false;
+                this.nautiverde.setAttacking(false);
+                this.nautiverde.attackAnimationTimeout = 0;
             }
+        }
+
+        private boolean isEnemyWithinAttackDistance(LivingEntity Enemy) {
+            return this.nautiverde.distanceTo(Enemy) <= 5f;
+        }
+
+        protected void resetAttackCooldown() {
+            this.nextDelay = this.getTickCount(startDelay * 2);
+        }
+
+        protected boolean isTimeToStartAttackAnimation() {
+            return this.nextDelay <= startDelay;
+        }
+
+        protected boolean isTimeToAttack() {
+            return this.nextDelay <= 0;
+        }
+
+        protected void performAttack(LivingEntity Enemy) {
+            this.resetAttackCooldown();
+            this.mob.swingHand(Hand.MAIN_HAND);
+            this.mob.tryAttack(Enemy);
         }
 
         @Override
         public void tick() {
-            List<ItemEntity> list = NautiverdeEntity.this.getWorld().getEntitiesByClass(ItemEntity.class, NautiverdeEntity.this.getBoundingBox().expand(8.0, 8.0, 8.0), CAN_TAKE);
-            ItemStack itemStack = NautiverdeEntity.this.getEquippedStack(EquipmentSlot.MAINHAND);
-            if (!itemStack.isEmpty()) {
-                this.spitOutItem(itemStack);
-                NautiverdeEntity.this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-            } else if (!list.isEmpty()) {
-                NautiverdeEntity.this.getNavigation().startMovingTo(list.get(0), 1.2f);
+            super.tick();
+            if(this.shouldCountTillNextAttack) {
+                this.nextDelay = Math.max(this.nextDelay - 1, 0);
             }
         }
 
-        private void spitOutItem(ItemStack stack) {
-            if (stack.isEmpty()) {
-                return;
-            }
-            double d = NautiverdeEntity.this.getEyeY() - (double)0.3f;
-            ItemEntity itemEntity = new ItemEntity(NautiverdeEntity.this.getWorld(), NautiverdeEntity.this.getX(), d, NautiverdeEntity.this.getZ(), stack);
-            itemEntity.setPickupDelay(40);
-            itemEntity.setThrower(NautiverdeEntity.this.getUuid());
-            float f = 0.3f;
-            float g = NautiverdeEntity.this.random.nextFloat() * ((float)Math.PI * 2);
-            float h = 0.02f * NautiverdeEntity.this.random.nextFloat();
-            itemEntity.setVelocity(0.3f * -MathHelper.sin(NautiverdeEntity.this.getYaw() * ((float)Math.PI / 180)) * MathHelper.cos(NautiverdeEntity.this.getPitch() * ((float)Math.PI / 180)) + MathHelper.cos(g) * h, 0.3f * MathHelper.sin(NautiverdeEntity.this.getPitch() * ((float)Math.PI / 180)) * 1.5f, 0.3f * MathHelper.cos(NautiverdeEntity.this.getYaw() * ((float)Math.PI / 180)) * MathHelper.cos(NautiverdeEntity.this.getPitch() * ((float)Math.PI / 180)) + MathHelper.sin(g) * h);
-            NautiverdeEntity.this.getWorld().spawnEntity(itemEntity);
+        @Override
+        public void stop() {
+            nautiverde.setAttacking(false);
+            super.stop();
+        }
+    }
+
+    static class NautiverdeSwimAroundGoal
+            extends SwimAroundGoal {
+        private final NautiverdeEntity nautiverde;
+
+        public NautiverdeSwimAroundGoal(PathAwareEntity pathAwareEntity, double d, int i) {
+            super(pathAwareEntity, d, i);
+            this.nautiverde = (NautiverdeEntity) pathAwareEntity;
+        }
+
+        @Override
+        public boolean canStart() {
+            return super.canStart() && !this.nautiverde.isHiding();
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return super.shouldContinue() && !this.nautiverde.isHiding();
+        }
+    }
+
+    static class NautiverdeLookAroundGoal
+            extends LookAroundGoal {
+        private final NautiverdeEntity nautiverde;
+
+        public NautiverdeLookAroundGoal(MobEntity mob) {
+            super(mob);
+            this.nautiverde = (NautiverdeEntity) mob;
+        }
+
+        @Override
+        public boolean canStart() {
+            return super.canStart() && !this.nautiverde.isHiding();
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return super.shouldContinue() && !this.nautiverde.isHiding();
         }
     }
 }
