@@ -4,6 +4,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
 import net.modzy.testmod.entity.custom.NautiverdeEntity;
@@ -21,10 +22,13 @@ public class NautiverdeRenderer extends MobEntityRenderer<NautiverdeEntity, Naut
 
     @Override
     public void render(NautiverdeEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        NbtCompound nbt = new NbtCompound();
+        mobEntity.writeNbt(nbt);
+        float Size = nbt.getFloat("Size");
         if(mobEntity.isBaby()) {
             matrixStack.scale(0.5f, 0.5f, 0.5f);
         } else {
-            matrixStack.scale(1.0f, 1.0f, 1.0f);
+            matrixStack.scale(Size, Size, Size);
         }
         super.render(mobEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }

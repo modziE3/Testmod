@@ -15,6 +15,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.WaterCreatureEntity;
@@ -22,14 +23,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.TimeHelper;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -37,28 +42,38 @@ import net.modzy.testmod.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.Random;
+import java.util.UUID;
 
 public class NautiverdeEntity
-        extends WaterCreatureEntity {
+        extends WaterCreatureEntity implements Angerable {
 
+    //region GLOBALS
+    public static final float MIN_HIDE_HEALTH = 10.0f;
     private static final TrackedData<Integer> MOISTNESS = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> SIZE = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> ATTACKING = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> HIDING = DataTracker.registerData(NautiverdeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    static final TargetPredicate CLOSE_PLAYER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(10.0).ignoreVisibility();
-    public static final Predicate<ItemEntity> CAN_TAKE = item -> !item.cannotPickup() && item.isAlive() && item.isTouchingWater();
+    static final TargetPredicate CLOSE_PLAYER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(15.0).ignoreVisibility();
+    private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
+    private static final UniformIntProvider ANGRY_SOUND_DELAY_RANGE = TimeHelper.betweenSeconds(0, 1);
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState hidingAnimationState = new AnimationState();
     public int attackAnimationTimeout = 0;
     public boolean canStartHiding = true;
-    public static final float MIN_HIDE_HEALTH = 10.0f;
+    private int angrySoundDelay;
+    private int angerTime;
+    @Nullable
+    private UUID angryAt;
+    private static final UniformIntProvider ANGER_PASSING_COOLDOWN_RANGE = TimeHelper.betweenSeconds(4, 6);
+    private int angerPassingCooldown;
+    //endregion
 
     public NautiverdeEntity(EntityType<? extends NautiverdeEntity> entityType, World world) {
         super(entityType, world);
         this.moveControl = new AquaticMoveControl(this, 85, 40, 0.01f, 0.1f, false);
         this.lookControl = new YawAdjustingLookControl(this, 7);
-        this.setCanPickUpLoot(true);
+        this.setModelRenderSize((float) ((Math.random() * 0.4) + 0.8));
     }
 
     @Override
@@ -69,16 +84,7 @@ public class NautiverdeEntity
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
-    @Override
-    protected void tickWaterBreathingAir(int air) {
-    }
-
-    @Override
-    public void onPlayerCollision(PlayerEntity player) {
-        this.setVelocity(this.getVelocity().multiply(0.5));
-        super.onPlayerCollision(player);
-    }
-
+    //region ANIMATION
     private void setupAnimationStates() {
         if (this.isAttacking() && this.attackAnimationTimeout <= 0) {
             this.attackAnimationTimeout = 40;
@@ -105,7 +111,9 @@ public class NautiverdeEntity
         float f = this.getPose() == EntityPose.STANDING ? Math.min(posDelta * 6.0f, 1.0f) : 0.0f;
         this.limbAnimator.updateLimbs(f, 0.2f);
     }
+    //endregion
 
+    //region DATA TRACKER & NBT
     public int getMoistness() {
         return this.dataTracker.get(MOISTNESS);
     }
@@ -130,26 +138,41 @@ public class NautiverdeEntity
         this.dataTracker.set(HIDING, hiding);
     }
 
+    public float getModelRenderSize() {
+        return this.dataTracker.get(SIZE);
+    }
+
+    public void setModelRenderSize(float size) {
+        this.dataTracker.set(SIZE, size);
+    }
+
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(ATTACKING, false);
         this.dataTracker.startTracking(HIDING, false);
+        this.dataTracker.startTracking(SIZE, 0.0f);
         this.dataTracker.startTracking(MOISTNESS, 2400);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
+        this.writeAngerToNbt(nbt);
         nbt.putInt("Moistness", this.getMoistness());
+        nbt.putFloat("Size", this.getModelRenderSize());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
+        this.readAngerFromNbt(this.getWorld(), nbt);
         this.setMoistness(nbt.getInt("Moistness"));
+        this.setModelRenderSize(nbt.getFloat("Size"));
     }
+    //endregion
 
+    //region ATTRIBUTES & AI
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new MoveIntoWaterGoal(this));
@@ -158,6 +181,8 @@ public class NautiverdeEntity
         this.goalSelector.add(4, new NautiverdeSwimAroundGoal(this, 1.0, 10));
         this.goalSelector.add(4, new NautiverdeLookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
+        this.targetSelector.add(3, new UniversalAngerGoal<>(this, true));
     }
 
     public static DefaultAttributeContainer.Builder createNautiverdeAttributes() {
@@ -168,6 +193,40 @@ public class NautiverdeEntity
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 3.0);
     }
 
+    @Override
+    protected void tickWaterBreathingAir(int air) {
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (source.isIn(DamageTypeTags.IS_PROJECTILE)) {
+            this.playDamageProjectileSound();
+            return false;
+        }
+        if (source.getAttacker()!=null && source.getAttacker().isPlayer()) {
+            PlayerEntity player = (PlayerEntity) source.getAttacker();
+            ItemStack heldItem = player.getMainHandStack();
+            if (this.isHiding() && !heldItem.isEmpty() && heldItem.isIn(ItemTags.TOOLS)) {
+                heldItem.damage(50, player, entity -> entity.sendToolBreakStatus(player.getActiveHand()));
+                this.playDamageHidingMeleeSound();
+            } else if (!player.isCreative() && (heldItem.isEmpty() || !heldItem.isIn(ItemTags.TOOLS))) {
+                this.playDamageMeleeFailSound();
+                return false;
+            }
+        }
+        return super.damage(source, amount);
+    }
+
+    public float initModelSize() {
+        int seed = this.getUuid().toString().hashCode();
+        Random random = new Random(seed);
+        float min = 0.8f;
+        float max = 1.2f;
+        return min + (max - min) * ((float) random.nextDouble());
+    }
+    //endregion
+
+    //region MOVEMENT
     @Override
     protected EntityNavigation createNavigation(World world) {
         return new SwimNavigation(this, world);
@@ -194,23 +253,16 @@ public class NautiverdeEntity
     }
 
     @Override
-    public boolean canEquip(ItemStack stack) {
-        EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
-        if (!this.getEquippedStack(equipmentSlot).isEmpty()) {
-            return false;
-        }
-        return equipmentSlot == EquipmentSlot.MAINHAND && super.canEquip(stack);
-    }
-
-    @Override
-    protected void loot(ItemEntity item) {
-        ItemStack itemStack;
-        if (this.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty() && this.canPickupItem(itemStack = item.getStack())) {
-            this.triggerItemPickedUpByEntityCriteria(item);
-            this.equipStack(EquipmentSlot.MAINHAND, itemStack);
-            this.updateDropChances(EquipmentSlot.MAINHAND);
-            this.sendPickup(item, itemStack.getCount());
-            item.discard();
+    public void travel(Vec3d movementInput) {
+        if (this.canMoveVoluntarily() && this.isTouchingWater()) {
+            this.updateVelocity(this.getMovementSpeed(), movementInput);
+            this.move(MovementType.SELF, this.getVelocity());
+            this.setVelocity(this.getVelocity().multiply(0.9));
+            if (this.getTarget() == null) {
+                this.setVelocity(this.getVelocity().add(0.0, 0.0, 0.0));
+            }
+        } else {
+            super.travel(movementInput);
         }
     }
 
@@ -259,6 +311,12 @@ public class NautiverdeEntity
         }
     }
 
+    @Override
+    public void onPlayerCollision(PlayerEntity player) {
+        this.setVelocity(this.getVelocity().multiply(0.98));
+        super.onPlayerCollision(player);
+    }
+
     private void spawnParticlesAround() {
         for (int i = 0; i < 7; ++i) {
             double d = this.random.nextGaussian() * 0.01;
@@ -267,27 +325,9 @@ public class NautiverdeEntity
             this.getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getParticleX(1.0), this.getRandomBodyY() + 0.2, this.getParticleZ(1.0), d, e, f);
         }
     }
+    //endregion
 
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (source.isIn(DamageTypeTags.IS_PROJECTILE)) {
-            this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 0.5f, 2.0f);
-            return false;
-        }
-        if (source.getAttacker()!=null && source.getAttacker().isPlayer()) {
-            PlayerEntity player = (PlayerEntity) source.getAttacker();
-            ItemStack heldItem = player.getMainHandStack();
-            if (this.getHealth() < MIN_HIDE_HEALTH && !heldItem.isEmpty() && heldItem.isIn(ItemTags.TOOLS)) {
-                heldItem.damage(50, player, entity -> entity.sendToolBreakStatus(player.getActiveHand()));
-                this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 1, 1);
-            } else if (!player.isCreative() && (heldItem.isEmpty() || !heldItem.isIn(ItemTags.TOOLS))) {
-                this.playSound(SoundEvents.BLOCK_STONE_BREAK, 0.85f, 1.0f);
-                return false;
-            }
-        }
-        return super.damage(source, amount);
-    }
-
+    //region SOUNDS
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.ENTITY_CAT_HURT;
@@ -315,19 +355,103 @@ public class NautiverdeEntity
         return SoundEvents.ENTITY_DOLPHIN_SWIM;
     }
 
+    private void playAngrySound() {
+        this.playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, this.getSoundVolume() * 2.0f, this.getSoundPitch() * 1.8f);
+    }
+
+    private void playDamageProjectileSound() {
+        this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 0.5f, 2.0f);
+    }
+
+    private void playDamageHidingMeleeSound() {
+        this.playSound(SoundEvents.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+    }
+
+    private void playDamageMeleeFailSound() {
+        this.playSound(SoundEvents.BLOCK_STONE_BREAK, 0.85f, 1.0f);
+    }
+    //endregion
+
+    //region ANGER
     @Override
-    public void travel(Vec3d movementInput) {
-        if (this.canMoveVoluntarily() && this.isTouchingWater()) {
-            this.updateVelocity(this.getMovementSpeed(), movementInput);
-            this.move(MovementType.SELF, this.getVelocity());
-            this.setVelocity(this.getVelocity().multiply(0.9));
-            if (this.getTarget() == null) {
-                this.setVelocity(this.getVelocity().add(0.0, 0.0, 0.0));
+    protected void mobTick() {
+        if (this.hasAngerTime()) {
+            this.tickAngrySound();
+        }
+        this.tickAngerLogic((ServerWorld)this.getWorld(), true);
+        if (this.getTarget() != null) {
+            this.tickAngerPassing();
+        }
+        if (this.hasAngerTime()) {
+            this.playerHitTimer = this.age;
+        }
+        super.mobTick();
+    }
+
+    @Override
+    public void setAngryAt(@Nullable UUID angryAt) {
+        this.angryAt = angryAt;
+    }
+
+    @Override
+    public void setAngerTime(int angerTime) {
+        this.angerTime = angerTime;
+    }
+
+    @Override
+    public int getAngerTime() {
+        return this.angerTime;
+    }
+
+    @Override
+    @Nullable
+    public UUID getAngryAt() {
+        return this.angryAt;
+    }
+
+    @Override
+    public void chooseRandomAngerTime() {
+        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
+    }
+
+    private void tickAngrySound() {
+        if (this.angrySoundDelay > 0) {
+            --this.angrySoundDelay;
+            if (this.angrySoundDelay == 0) {
+                this.playAngrySound();
             }
-        } else {
-            super.travel(movementInput);
         }
     }
+
+    private void tickAngerPassing() {
+        if (this.angerPassingCooldown > 0) {
+            --this.angerPassingCooldown;
+            return;
+        }
+        if (this.getVisibilityCache().canSee(this.getTarget())) {
+            this.angerNearbyNautiverde();
+        }
+        this.angerPassingCooldown = ANGER_PASSING_COOLDOWN_RANGE.get(this.random);
+    }
+
+    private void angerNearbyNautiverde() {
+        double d = this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+        Box box = Box.from(this.getPos()).expand(d, 10.0, d);
+        this.getWorld().getEntitiesByClass(NautiverdeEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR).stream().filter(nautiverde -> nautiverde != this).filter(nautiverde -> nautiverde.getTarget() == null).filter(nautiverde -> !nautiverde.isTeammate(this.getTarget())).forEach(nautiverde -> nautiverde.setTarget(this.getTarget()));
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        if (this.getTarget() == null && target != null) {
+            this.angrySoundDelay = ANGRY_SOUND_DELAY_RANGE.get(this.random);
+            this.angerPassingCooldown = ANGER_PASSING_COOLDOWN_RANGE.get(this.random);
+        }
+        if (target instanceof PlayerEntity) {
+            this.setAttacking((PlayerEntity)target);
+        }
+        super.setTarget(target);
+    }
+    //endregion
 
     static class HideGoal
             extends Goal {
@@ -350,7 +474,7 @@ public class NautiverdeEntity
 
         @Override
         public boolean shouldContinue() {
-            return this.closestPlayer != null && this.nautiverde.getHealth() <= MIN_HIDE_HEALTH && this.nautiverde.squaredDistanceTo(this.closestPlayer) < 2500.0;
+            return this.closestPlayer != null && this.nautiverde.getHealth() <= MIN_HIDE_HEALTH + 10.0f && this.nautiverde.squaredDistanceTo(this.closestPlayer) < 2500.0;
         }
 
         @Override

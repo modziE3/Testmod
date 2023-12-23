@@ -29,8 +29,6 @@ public class GenderedEntity extends AnimalEntity {
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
-
-
     public void initGender(NbtCompound entityData) {
         UUID entityDataUuid = entityData.getUuid("UUID");
         String ID = entityDataUuid.toString();
