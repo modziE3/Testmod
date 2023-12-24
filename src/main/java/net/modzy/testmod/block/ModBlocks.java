@@ -12,6 +12,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
 import net.modzy.testmod.block.custom.DustBlock;
+import net.modzy.testmod.block.custom.GeothermalVentBlock;
 
 public class ModBlocks {
     public static final Block TOPAZ_BLOCK = registerBlock("topaz_block", new Block(FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).sounds(BlockSoundGroup.AMETHYST_BLOCK).mapColor(MapColor.GOLD)));
@@ -19,6 +20,9 @@ public class ModBlocks {
     public static final Block MARTIAN_SILT = registerBlock("martian_silt", new DustBlock(AbstractBlock.Settings.create().mapColor(MapColor.ORANGE).replaceable().notSolid().ticksRandomly().strength(0.1f).requiresTool().sounds(BlockSoundGroup.SAND).blockVision((state, world, pos) -> state.get(SnowBlock.LAYERS) >= 8).pistonBehavior(PistonBehavior.DESTROY)));
     public static final Block LUNAR_SILT_BLOCK = registerBlock("lunar_silt_block", new Block(AbstractBlock.Settings.create().mapColor(MapColor.WHITE_GRAY).requiresTool().strength(0.2f).sounds(BlockSoundGroup.SAND)));
     public static final Block LUNAR_SILT = registerBlock("lunar_silt", new DustBlock(AbstractBlock.Settings.create().mapColor(MapColor.WHITE_GRAY).replaceable().notSolid().ticksRandomly().strength(0.1f).requiresTool().sounds(BlockSoundGroup.SAND).blockVision((state, world, pos) -> state.get(SnowBlock.LAYERS) >= 8).pistonBehavior(PistonBehavior.DESTROY)));
+
+    public static final Block MUD_HYDROTHERMAL_VENT = registerBlock("mud_hydrothermal_vent", new GeothermalVentBlock(AbstractBlock.Settings.copy(Blocks.DIRT).mapColor(MapColor.TERRACOTTA_CYAN).allowsSpawning(Blocks::always).solidBlock(Blocks::always).blockVision(Blocks::always).suffocates(Blocks::always).sounds(BlockSoundGroup.MUD).luminance(state -> 9)));
+
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

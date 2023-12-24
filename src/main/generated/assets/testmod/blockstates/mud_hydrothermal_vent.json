@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "testmod:block/mud_hydrothermal_vent"
+    }
+  }
+}

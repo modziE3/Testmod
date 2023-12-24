@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "testmod:block/mud_hydrothermal_vent_side",
+    "top": "testmod:block/mud_hydrothermal_vent_top"
+  }
+}

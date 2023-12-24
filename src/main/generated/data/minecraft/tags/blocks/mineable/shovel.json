@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "testmod:martian_silt_block",
-    "testmod:martian_silt"
+    "testmod:martian_silt",
+    "testmod:mud_hydrothermal_vent"
   ]
 }

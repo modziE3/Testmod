@@ -3,6 +3,7 @@ package net.modzy.testmod.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLootTableProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.DataWriter;
 import net.minecraft.loot.LootTable;
 import net.minecraft.util.Identifier;
@@ -22,6 +23,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
     public void generate() {
         addDrop(ModBlocks.TOPAZ_BLOCK);
         addDrop(ModBlocks.MARTIAN_SILT_BLOCK);
+        addDrop(ModBlocks.MUD_HYDROTHERMAL_VENT, Blocks.MUD);
 
     }
 }

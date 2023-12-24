@@ -19,10 +19,12 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        // Simples
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TOPAZ_BLOCK);
+        blockStateModelGenerator.registerSingleton(ModBlocks.MUD_HYDROTHERMAL_VENT, TexturedModel.CUBE_TOP);
+        // Customs
         registerDustTypeBlock(blockStateModelGenerator, ModBlocks.MARTIAN_SILT_BLOCK, ModBlocks.MARTIAN_SILT);
         registerDustTypeBlock(blockStateModelGenerator, ModBlocks.LUNAR_SILT_BLOCK, ModBlocks.LUNAR_SILT);
-
 
     }
 
