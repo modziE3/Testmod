@@ -9,6 +9,9 @@ import net.modzy.testmod.Testmod;
 public class ModSounds {
 
     public static final SoundEvent ENTITY_NAUTIVERDE_AMBIENT = registerSoundEvent("entity_nautiverde_ambient");
+    public static final SoundEvent ENTITY_NAUTIVERDE_ANGRY = registerSoundEvent("entity_nautiverde_angry");
+    public static final SoundEvent ENTITY_NAUTIVERDE_DEATH = registerSoundEvent("entity_nautiverde_death");
+    public static final SoundEvent ENTITY_NAUTIVERDE_HURT = registerSoundEvent("entity_nautiverde_hurt");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier Id = new Identifier(Testmod.MOD_ID, name);

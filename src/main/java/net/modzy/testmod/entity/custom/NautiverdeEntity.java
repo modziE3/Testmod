@@ -330,13 +330,13 @@ public class NautiverdeEntity
     //region SOUNDS
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_CAT_HURT;
+        return ModSounds.ENTITY_NAUTIVERDE_HURT;
     }
 
     @Override
     @Nullable
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_CAT_DEATH;
+        return ModSounds.ENTITY_NAUTIVERDE_DEATH;
     }
 
     @Override
@@ -356,7 +356,7 @@ public class NautiverdeEntity
     }
 
     private void playAngrySound() {
-        this.playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, this.getSoundVolume() * 2.0f, this.getSoundPitch() * 1.8f);
+        this.playSound(ModSounds.ENTITY_NAUTIVERDE_ANGRY, this.getSoundVolume() * 2.0f, this.getSoundPitch() * 1.8f);
     }
 
     private void playDamageProjectileSound() {

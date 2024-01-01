@@ -2,9 +2,34 @@
   "entity_nautiverde_ambient": {
     "subtitle": "sounds.testmod.entity_nautiverde_ambient",
     "sounds": [
-      "testmod:nautiverde_ambient_1",
-      "testmod:nautiverde_ambient_2",
-      "testmod:nautiverde_ambient_3"
+      "testmod:nautiverde_ambient/nautiverde_ambient_1",
+      "testmod:nautiverde_ambient/nautiverde_ambient_2",
+      "testmod:nautiverde_ambient/nautiverde_ambient_3",
+      "testmod:nautiverde_ambient/nautiverde_ambient_4",
+      "testmod:nautiverde_ambient/nautiverde_ambient_5",
+      "testmod:nautiverde_ambient/nautiverde_ambient_6"
+    ]
+  },
+  "entity_nautiverde_angry": {
+    "subtitle": "sounds.testmod.entity_nautiverde_angry",
+    "sounds": [
+      "testmod:nautiverde_angry/nautiverde_angry_1",
+      "testmod:nautiverde_angry/nautiverde_angry_2",
+      "testmod:nautiverde_angry/nautiverde_angry_3"
+    ]
+  },
+  "entity_nautiverde_death": {
+    "subtitle": "sounds.testmod.entity_nautiverde_death",
+    "sounds": [
+      "testmod:nautiverde_death/nautiverde_death_1",
+      "testmod:nautiverde_death/nautiverde_death_2"
+    ]
+  },
+  "entity_nautiverde_hurt": {
+    "subtitle": "sounds.testmod.entity_nautiverde_hurt",
+    "sounds": [
+      "testmod:nautiverde_hurt/nautiverde_hurt_1",
+      "testmod:nautiverde_hurt/nautiverde_hurt_2"
     ]
   }
 }

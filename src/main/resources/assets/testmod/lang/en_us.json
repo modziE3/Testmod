@@ -22,5 +22,8 @@
   "entity.testmod.nautiverde": "Nautiverde",
   "entity.testmod.miranda": "Paradise Duck",
 
-  "sounds.testmod.entity_nautiverde_ambient": "Nautiverde Ambient Noise"
+  "sounds.testmod.entity_nautiverde_ambient": "Nautiverde Ambient Noise",
+  "sounds.testmod.entity_nautiverde_angry": "Nautiverde Angry Noise",
+  "sounds.testmod.entity_nautiverde_death": "Nautiverde Death Noise",
+  "sounds.testmod.entity_nautiverde_hurt": "Nautiverde Hurt Noise"
 }

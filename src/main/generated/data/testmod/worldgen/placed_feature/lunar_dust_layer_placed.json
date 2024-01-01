@@ -1,0 +1,8 @@
+{
+  "feature": "testmod:lunar_dust_layer",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}
