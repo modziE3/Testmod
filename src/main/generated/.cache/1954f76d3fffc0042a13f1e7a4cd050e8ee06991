@@ -1,7 +1,7 @@
-// 1.20.2	2024-01-01T17:28:40.0212203	Testmod/World Gen
+// 1.20.2	2024-01-02T21:50:09.2294274	Testmod/World Gen
 65b6de85433b3815782cb535f3c2d82198e68aa6 data\testmod\worldgen\configured_feature\lunar_dust_layer.json
-2fe1b2cb23680f7ccea0cdb66a862c84a382b389 data\testmod\dimension_type\moon_dim_type.json
-6aca098c35db1f88fb477f33ecc1f8bf6c4133e9 data\testmod\worldgen\placed_feature\basalt_boulder_placed.json
-66dd9634e7b5cc91e72ae01426475be1bf4f2087 data\testmod\worldgen\biome\lunar_rocky_glades.json
+77351ee47f3f6cf6876e82e4bcd85c862e504225 data\testmod\dimension_type\moon_dim_type.json
+11d1f8f800621194c269bfae8965c43d9012ef28 data\testmod\worldgen\placed_feature\basalt_boulder_placed.json
+9524b019df054dcdeb3019035b9edf5e29629caf data\testmod\worldgen\biome\lunar_rocky_glades.json
 450b9729c260044b3fe395443a2044620a3daf2d data\testmod\worldgen\placed_feature\lunar_dust_layer_placed.json
-8648f6e6cc3f50124c642eaa24d6fbb6e03af745 data\testmod\worldgen\configured_feature\basalt_boulder.json
+8d07e734256dc85b31e711843537aa65c56fddb5 data\testmod\worldgen\configured_feature\basalt_boulder.json

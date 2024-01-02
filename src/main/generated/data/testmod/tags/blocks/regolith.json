@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "testmod:lunar_silt_block",
+    "testmod:martian_silt_block"
+  ]
+}

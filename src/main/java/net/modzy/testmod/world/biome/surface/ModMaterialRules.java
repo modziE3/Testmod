@@ -25,17 +25,19 @@ public class ModMaterialRules {
         return surfChain(
                 surfIf(MaterialRules.biome(ModBiomes.LUNAR_ROCKY_GLADES), surfChain(
                         surfIf(MaterialRules.verticalGradient("bedrock_floor", YOffset.getBottom(), YOffset.aboveBottom(5)), BEDROCK),
-                        MaterialRules.condition(MaterialRules.verticalGradient("deepslate", YOffset.fixed(0), YOffset.fixed(8)), BASALT),
+                        MaterialRules.condition(MaterialRules.verticalGradient("deep_basalt", YOffset.fixed(0), YOffset.fixed(8)), BASALT),
                         surfIf(MaterialRules.STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH, surfIf(isAtAndAboveSeaLevel, LUNAR_SILT_BLOCK)), SMOOTH_BASALT
 
                 ))
         );
     }
 
+    public static MaterialRules.MaterialCondition surfNot(MaterialRules.MaterialCondition condition) {
+        return MaterialRules.not(condition);
+    }
     public static MaterialRules.MaterialRule surfIf(MaterialRules.MaterialCondition condition, MaterialRules.MaterialRule rule) {
         return MaterialRules.condition(condition, rule);
     }
-
     public static MaterialRules.MaterialRule surfChain(MaterialRules.MaterialRule... rules) {
         return MaterialRules.sequence(rules);
     }

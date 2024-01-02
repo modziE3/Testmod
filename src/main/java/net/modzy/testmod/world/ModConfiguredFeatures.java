@@ -15,7 +15,7 @@ public class ModConfiguredFeatures {
 
     public static void boostrap(Registerable<ConfiguredFeature<?, ?>> context) {
 
-        register(context, BASALT_BOULDER_KEY, Feature.FOREST_ROCK, new SingleStateFeatureConfig(Blocks.BASALT.getDefaultState()));
+        register(context, BASALT_BOULDER_KEY, ModFeatures.BASALT_BOULDER, new SingleStateFeatureConfig(Blocks.BASALT.getDefaultState()));
         register(context, LUNAR_DUST_LAYER_KEY, ModFeatures.LUNAR_DUST_TOP_LAYER, new DefaultFeatureConfig());
 
     }

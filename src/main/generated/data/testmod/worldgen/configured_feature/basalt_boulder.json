@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:forest_rock",
+  "type": "testmod:basalt_boulder",
   "config": {
     "state": {
       "Name": "minecraft:basalt",

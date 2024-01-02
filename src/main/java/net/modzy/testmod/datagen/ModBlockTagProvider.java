@@ -8,6 +8,7 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.block.ModBlocks;
+import net.modzy.testmod.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +19,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
+
+        getOrCreateTagBuilder(ModTags.Blocks.REGOLITH)
+                .add(ModBlocks.LUNAR_SILT_BLOCK)
+                .add(ModBlocks.MARTIAN_SILT_BLOCK);
 
         //region Tool Types : PICK, AXE, HOE
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)

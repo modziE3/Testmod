@@ -11,6 +11,8 @@ public class ModTags {
 
     public static class Blocks {
 
+        public static final TagKey<Block> REGOLITH = createTag("regolith");
+
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK,  new Identifier(Testmod.MOD_ID, name));
         }
