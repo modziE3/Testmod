@@ -22,6 +22,8 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         addDrop(ModBlocks.TOPAZ_BLOCK);
+        addDrop(ModBlocks.ANORTHOSITE);
+        addDrop(ModBlocks.POLISHED_ANORTHOSITE);
         addDrop(ModBlocks.MARTIAN_SILT_BLOCK);
         addDrop(ModBlocks.MUD_HYDROTHERMAL_VENT, Blocks.MUD);
 

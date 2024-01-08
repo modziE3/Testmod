@@ -26,7 +26,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         //region Tool Types : PICK, AXE, HOE
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(ModBlocks.TOPAZ_BLOCK);
+                .add(ModBlocks.TOPAZ_BLOCK)
+                .add(ModBlocks.ANORTHOSITE)
+                .add(ModBlocks.POLISHED_ANORTHOSITE);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE);
 

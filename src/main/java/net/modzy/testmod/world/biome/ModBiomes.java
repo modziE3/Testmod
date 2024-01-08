@@ -60,6 +60,7 @@ public class ModBiomes {
 
         globalOverworldGeneration(biomeBuilder);
         DefaultSpaceBiomeFeatures.addLunarDustedTopLayer(biomeBuilder);
+        DefaultSpaceBiomeFeatures.addAnorthositeRocks(biomeBuilder);
         DefaultSpaceBiomeFeatures.addBasaltRocks(biomeBuilder);
         //DefaultBiomeFeatures.addDefaultOres(biomeBuilder);
         //DefaultBiomeFeatures.addExtraGoldOre(biomeBuilder);

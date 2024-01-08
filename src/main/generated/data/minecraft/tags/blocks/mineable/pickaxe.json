@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "testmod:topaz_block"
+    "testmod:topaz_block",
+    "testmod:anorthosite",
+    "testmod:polished_anorthosite"
   ]
 }

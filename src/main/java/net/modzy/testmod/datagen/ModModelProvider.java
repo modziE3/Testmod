@@ -21,6 +21,8 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         // Simples
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TOPAZ_BLOCK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ANORTHOSITE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.POLISHED_ANORTHOSITE);
         blockStateModelGenerator.registerSingleton(ModBlocks.MUD_HYDROTHERMAL_VENT, TexturedModel.CUBE_TOP);
         // Customs
         registerDustTypeBlock(blockStateModelGenerator, ModBlocks.MARTIAN_SILT_BLOCK, ModBlocks.MARTIAN_SILT);

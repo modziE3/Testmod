@@ -26,6 +26,7 @@
       "minecraft:lake_lava_surface"
     ],
     [
+      "testmod:anorthosite_boulder_placed",
       "testmod:basalt_boulder_placed"
     ],
     [],

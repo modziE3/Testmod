@@ -19,6 +19,7 @@ import java.util.List;
 public class ModPlacedFeatures {
 
     public static final RegistryKey<PlacedFeature> BASALT_BOULDER_PLACED_KEY = registerKey("basalt_boulder_placed");
+    public static final RegistryKey<PlacedFeature> ANORTHOSITE_BOULDER_PLACED_KEY = registerKey("anorthosite_boulder_placed");
     public static final RegistryKey<PlacedFeature> LUNAR_DUST_LAYER_PLACED_KEY = registerKey("lunar_dust_layer_placed");
 
 
@@ -26,6 +27,9 @@ public class ModPlacedFeatures {
         var configuredFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
         register(context, BASALT_BOULDER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.BASALT_BOULDER_KEY),
+                CountPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
+
+        register(context, ANORTHOSITE_BOULDER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.ANORTHOSITE_BOULDER_KEY),
                 CountPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
 
         register(context, LUNAR_DUST_LAYER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_DUST_LAYER_KEY),

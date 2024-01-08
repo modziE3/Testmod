@@ -2,7 +2,6 @@ package net.modzy.testmod.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
@@ -11,9 +10,9 @@ import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.modzy.testmod.world.gen.ModFeatures;
 
-public class BasaltBoulderFeature
+public class BoulderFeature
         extends Feature<SingleStateFeatureConfig> {
-    public BasaltBoulderFeature(Codec<SingleStateFeatureConfig> codec) {
+    public BoulderFeature(Codec<SingleStateFeatureConfig> codec) {
         super(codec);
     }
 
@@ -30,9 +29,9 @@ public class BasaltBoulderFeature
             return false;
         }
         for (int i = 0; i < 3; ++i) {
-            int j = random.nextInt(3);
-            int k = random.nextInt(3);
-            int l = random.nextInt(3);
+            int j = random.nextInt(2);
+            int k = random.nextInt(2);
+            int l = random.nextInt(2);
             float f = (float)(j + k + l) * 0.333f + 0.5f;
             for (BlockPos blockPos2 : BlockPos.iterate(blockPos.add(-j, -k, -l), blockPos.add(j, k, l))) {
                 if (!(blockPos2.getSquaredDistance(blockPos) <= (double)(f * f))) continue;

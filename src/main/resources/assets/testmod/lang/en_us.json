@@ -15,9 +15,12 @@
   "block.testmod.lunar_silt_block": "Lunar Silt",
   "block.testmod.lunar_silt": "Lunar Dust Pile",
   "block.testmod.mud_hydrothermal_vent": "Mud Hydrothermal Vent",
+  "block.testmod.anorthosite": "Anorthosite",
+  "block.testmod.polished_anorthosite": "Polished Anorthosite",
 
   "itemgroup.animal_group": "Animal Items",
   "itemgroup.topaz": "Topaz Items",
+  "itemgroup.terrain_blocks_group": "Terrain Blocks",
 
   "entity.testmod.nautiverde": "Nautiverde",
   "entity.testmod.miranda": "Paradise Duck",

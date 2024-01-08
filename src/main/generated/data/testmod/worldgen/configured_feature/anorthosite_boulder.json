@@ -1,0 +1,8 @@
+{
+  "type": "testmod:anorthosite_boulder",
+  "config": {
+    "state": {
+      "Name": "testmod:anorthosite"
+    }
+  }
+}

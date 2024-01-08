@@ -7,15 +7,18 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.*;
 import net.modzy.testmod.Testmod;
+import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.world.gen.ModFeatures;
 
 public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> BASALT_BOULDER_KEY = registerKey("basalt_boulder");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_BOULDER_KEY = registerKey("anorthosite_boulder");
     public static final RegistryKey<ConfiguredFeature<?, ?>> LUNAR_DUST_LAYER_KEY = registerKey("lunar_dust_layer");
 
     public static void boostrap(Registerable<ConfiguredFeature<?, ?>> context) {
 
         register(context, BASALT_BOULDER_KEY, ModFeatures.BASALT_BOULDER, new SingleStateFeatureConfig(Blocks.BASALT.getDefaultState()));
+        register(context, ANORTHOSITE_BOULDER_KEY, ModFeatures.ANORTHOSITE_BOULDER, new SingleStateFeatureConfig(ModBlocks.ANORTHOSITE.getDefaultState()));
         register(context, LUNAR_DUST_LAYER_KEY, ModFeatures.LUNAR_DUST_TOP_LAYER, new DefaultFeatureConfig());
 
     }

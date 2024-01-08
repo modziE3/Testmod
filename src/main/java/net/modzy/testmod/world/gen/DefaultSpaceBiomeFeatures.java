@@ -10,6 +10,10 @@ public class DefaultSpaceBiomeFeatures {
         builder.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, ModPlacedFeatures.BASALT_BOULDER_PLACED_KEY);
     }
 
+    public static void addAnorthositeRocks(GenerationSettings.LookupBackedBuilder builder) {
+        builder.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, ModPlacedFeatures.ANORTHOSITE_BOULDER_PLACED_KEY);
+    }
+
     public static void addLunarDustedTopLayer(GenerationSettings.LookupBackedBuilder builder) {
         builder.feature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, ModPlacedFeatures.LUNAR_DUST_LAYER_PLACED_KEY);
     }

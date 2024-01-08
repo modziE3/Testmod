@@ -1,5 +1,6 @@
-// 1.20.2	2024-01-02T21:50:09.2314281	Testmod/Recipes
+// 1.20.2	2024-01-03T18:50:39.656243	Testmod/Recipes
 40c5e77fbb6e705244d33ac8edb8e42745233adc data\testmod\advancements\recipes\combat\topaz_chestplate.json
+54b5c711aea9cfd4c70080422491a8e8ae56458f data\testmod\advancements\recipes\building_blocks\polished_anorthosite.json
 5fca454ce5390afddc16c43bfc2b1de6e77bdb9f data\testmod\advancements\recipes\combat\topaz_helmet.json
 030c0167b841eec03703c820b825db0ce2f1076e data\testmod\recipes\topaz_block.json
 24429b6df57d3771c598530d8bfd8128069fa184 data\testmod\recipes\topaz_helmet.json
@@ -10,6 +11,7 @@ ac5a548f0e2232016e5c98f1858ab6498d1797d2 data\testmod\advancements\recipes\decor
 7b8d24bc5bea43d50726946e144d2277bc5c9a80 data\testmod\recipes\topaz.json
 cc6746f39979ae7446860669183b5345456de45a data\testmod\recipes\topaz_leggings.json
 be81e0ed05bd3e0fb1db7ad73d6365197c29573b data\testmod\advancements\recipes\building_blocks\topaz.json
+ee237d6a843d7014e85f48d77fb1dedb44a22736 data\testmod\recipes\polished_anorthosite.json
 6fabe065c8c0ea78390bc07e8401802bf2a1a5e6 data\testmod\recipes\topaz_chestplate.json
 e8d794272126b7328260241e4cbcfeb5ab0361c1 data\testmod\advancements\recipes\combat\topaz_boots.json
 98249000a19fddc4e18b7c368bd80ddacf66ecb2 data\testmod\advancements\recipes\misc\conduit.json
