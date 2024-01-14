@@ -2,6 +2,7 @@ package net.modzy.testmod.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -23,6 +24,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(ModTags.Blocks.REGOLITH)
                 .add(ModBlocks.LUNAR_SILT_BLOCK)
                 .add(ModBlocks.MARTIAN_SILT_BLOCK);
+
+        getOrCreateTagBuilder(ModTags.Blocks.BASE_STONE_MOON)
+                .add(Blocks.SMOOTH_BASALT)
+                .add(Blocks.BASALT);
 
         //region Tool Types : PICK, AXE, HOE
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)

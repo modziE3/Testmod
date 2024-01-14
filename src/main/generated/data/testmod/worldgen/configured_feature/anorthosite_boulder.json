@@ -1,5 +1,5 @@
 {
-  "type": "testmod:anorthosite_boulder",
+  "type": "testmod:basalt_boulder",
   "config": {
     "state": {
       "Name": "testmod:anorthosite"

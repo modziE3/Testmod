@@ -22,17 +22,19 @@
   "features": [
     [],
     [
-      "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface"
+      "testmod:frozen_lake_placed"
     ],
     [
-      "testmod:anorthosite_boulder_placed",
-      "testmod:basalt_boulder_placed"
+      "testmod:basalt_boulder_placed",
+      "testmod:anorthosite_boulder_placed"
     ],
     [],
     [],
     [],
-    [],
+    [
+      "testmod:ore_moon_anorthosite",
+      "testmod:ore_moon_tuff"
+    ],
     [],
     [],
     [],

@@ -49,18 +49,18 @@ public class LunarDustTopLayerFeature extends Feature<DefaultFeatureConfig> {
                             mutable.add(0,0,-3), mutable.add(-1,0,-2), mutable.add(-2,0,-1)};
                     double layer = 1;
                     for (BlockPos neighbor : neighbors1) {
-                        if (structureWorldAccess.getBlockState(neighbor) == ModBlocks.LUNAR_SILT_BLOCK.getDefaultState() || structureWorldAccess.getBlockState(neighbor) == Blocks.BASALT.getDefaultState()) {
+                        if (structureWorldAccess.getBlockState(neighbor) != Blocks.AIR.getDefaultState() && structureWorldAccess.getBlockState(neighbor).getBlock() != ModBlocks.LUNAR_SILT) {
                             layer = layer + 1.25;
                         }
                     }
                     for (BlockPos neighbor : neighbors2) {
-                        if (structureWorldAccess.getBlockState(neighbor) == ModBlocks.LUNAR_SILT_BLOCK.getDefaultState() || structureWorldAccess.getBlockState(neighbor) == Blocks.BASALT.getDefaultState()) {
+                        if (structureWorldAccess.getBlockState(neighbor) != Blocks.AIR.getDefaultState() && structureWorldAccess.getBlockState(neighbor).getBlock() != ModBlocks.LUNAR_SILT) {
                             layer = layer + 0.9;
                         }
                     }
                     for (BlockPos neighbor : neighbors3) {
-                        if (structureWorldAccess.getBlockState(neighbor) == ModBlocks.LUNAR_SILT_BLOCK.getDefaultState() || structureWorldAccess.getBlockState(neighbor) == Blocks.BASALT.getDefaultState()) {
-                            layer = layer + 0.4;
+                        if (structureWorldAccess.getBlockState(neighbor) != Blocks.AIR.getDefaultState() && structureWorldAccess.getBlockState(neighbor).getBlock() != ModBlocks.LUNAR_SILT) {
+                            layer = layer + 0.6;
                         }
                     }
                     structureWorldAccess.setBlockState(mutable, ModBlocks.LUNAR_SILT.getDefaultState().with(LAYERS, (int) Math.min(layer, 8)), Block.NOTIFY_LISTENERS);

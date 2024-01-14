@@ -11,16 +11,17 @@ import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.modzy.testmod.Testmod;
 import net.modzy.testmod.util.ModTags;
 import net.modzy.testmod.world.gen.feature.BoulderFeature;
+import net.modzy.testmod.world.gen.feature.FrozenLakeFeature;
 import net.modzy.testmod.world.gen.feature.LunarDustTopLayerFeature;
 
 public abstract class ModFeatures {
 
     public static final Feature<DefaultFeatureConfig> LUNAR_DUST_TOP_LAYER = registerFeature("lunar_dust_top_layer",
             new LunarDustTopLayerFeature(DefaultFeatureConfig.CODEC));
-    public static final Feature<SingleStateFeatureConfig> BASALT_BOULDER = registerFeature("basalt_boulder",
+    public static final Feature<SingleStateFeatureConfig> BOULDER = registerFeature("basalt_boulder",
             new BoulderFeature(SingleStateFeatureConfig.CODEC));
-    public static final Feature<SingleStateFeatureConfig> ANORTHOSITE_BOULDER = registerFeature("anorthosite_boulder",
-            new BoulderFeature(SingleStateFeatureConfig.CODEC));
+    public static final Feature<DefaultFeatureConfig> FROZEN_LAKE_FEATURE = registerFeature("frozen_lake_feature",
+            new FrozenLakeFeature(DefaultFeatureConfig.CODEC));
 
     private static <C extends FeatureConfig, F extends Feature<C>> F registerFeature(String name, F feature) {
         return Registry.register(Registries.FEATURE, new Identifier(Testmod.MOD_ID, name), feature);

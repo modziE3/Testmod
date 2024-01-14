@@ -37,11 +37,18 @@ public class ModBiomes {
 
     public static void globalOverworldGeneration(GenerationSettings.LookupBackedBuilder builder) {
         DefaultBiomeFeatures.addLandCarvers(builder);
-        //DefaultBiomeFeatures.addAmethystGeodes(builder);
-        //DefaultBiomeFeatures.addDungeons(builder);
-        //DefaultBiomeFeatures.addMineables(builder);
-        //DefaultBiomeFeatures.addSprings(builder);
-        //DefaultBiomeFeatures.addFrozenTopLayer(builder);
+        DefaultBiomeFeatures.addAmethystGeodes(builder);
+        DefaultBiomeFeatures.addDungeons(builder);
+        DefaultBiomeFeatures.addMineables(builder);
+        DefaultBiomeFeatures.addSprings(builder);
+        DefaultBiomeFeatures.addFrozenTopLayer(builder);
+    }
+
+    public static void globalMoonGeneration(GenerationSettings.LookupBackedBuilder builder) {
+        DefaultSpaceBiomeFeatures.addSpaceLandCarvers(builder);
+        DefaultSpaceBiomeFeatures.addMoonMineables(builder);
+        DefaultSpaceBiomeFeatures.addLunarDustedTopLayer(builder);
+        DefaultSpaceBiomeFeatures.addMoonRocks(builder);
     }
 
     public static Biome lunarRockyGlades(Registerable<Biome> context) {
@@ -58,10 +65,9 @@ public class ModBiomes {
                         context.getRegistryLookup(RegistryKeys.PLACED_FEATURE),
                         context.getRegistryLookup(RegistryKeys.CONFIGURED_CARVER));
 
-        globalOverworldGeneration(biomeBuilder);
-        DefaultSpaceBiomeFeatures.addLunarDustedTopLayer(biomeBuilder);
-        DefaultSpaceBiomeFeatures.addAnorthositeRocks(biomeBuilder);
-        DefaultSpaceBiomeFeatures.addBasaltRocks(biomeBuilder);
+        //globalOverworldGeneration(biomeBuilder);
+        globalMoonGeneration(biomeBuilder);
+
         //DefaultBiomeFeatures.addDefaultOres(biomeBuilder);
         //DefaultBiomeFeatures.addExtraGoldOre(biomeBuilder);
 
