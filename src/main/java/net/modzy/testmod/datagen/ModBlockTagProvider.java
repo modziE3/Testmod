@@ -21,6 +21,15 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
+        getOrCreateTagBuilder(ModTags.Blocks.MOON_CARVER_REPLACEABLES)
+                .add(Blocks.SMOOTH_BASALT)
+                .add(Blocks.BASALT)
+                .add(Blocks.WATER)
+                .add(Blocks.TUFF)
+                .add(ModBlocks.ANORTHOSITE)
+                .add(ModBlocks.LUNAR_SILT_BLOCK)
+                .add(ModBlocks.LUNAR_SILT);
+
         getOrCreateTagBuilder(ModTags.Blocks.REGOLITH)
                 .add(ModBlocks.LUNAR_SILT_BLOCK)
                 .add(ModBlocks.MARTIAN_SILT_BLOCK);

@@ -1,4 +1,4 @@
-// 1.20.2	2024-01-13T13:49:24.7409198	Testmod/Tags for minecraft:block
+// 1.20.2	2024-01-16T19:56:18.98442	Testmod/Tags for minecraft:block
 5c4ec521327f6077d2fc941bb20bd0c391c8e321 data\testmod\tags\blocks\base_stone_moon.json
 8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\minecraft\tags\blocks\mineable\hoe.json
 8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\minecraft\tags\blocks\mineable\axe.json
@@ -7,5 +7,6 @@
 8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\minecraft\tags\blocks\needs_stone_tool.json
 c00a2bbb95ea66b1c1640cfacc02221fde10862b data\minecraft\tags\blocks\needs_iron_tool.json
 b1af19d0972470aaf0f6e16a9c3669ceaca9b9ba data\testmod\tags\blocks\regolith.json
+1e2cde61d17c474b9b17786bbcf4eecfe8ee7a25 data\testmod\tags\blocks\moon_carver_replaceables.json
 a4fe0bda3bac0d45c17db58f21b0d20e38796250 data\minecraft\tags\blocks\mineable\shovel.json
 8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\minecraft\tags\blocks\needs_diamond_tool.json

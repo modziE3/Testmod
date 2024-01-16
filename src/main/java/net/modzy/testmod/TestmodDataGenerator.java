@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.modzy.testmod.datagen.*;
+import net.modzy.testmod.world.ModConfiguredCarvers;
 import net.modzy.testmod.world.ModConfiguredFeatures;
 import net.modzy.testmod.world.ModPlacedFeatures;
 import net.modzy.testmod.world.biome.ModBiomes;
@@ -26,6 +27,7 @@ public class TestmodDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
 	public void buildRegistry(RegistryBuilder registryBuilder) {
+		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_CARVER, ModConfiguredCarvers::bootstrap);
 		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ModConfiguredFeatures::boostrap);
 		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ModPlacedFeatures::boostrap);
 		registryBuilder.addRegistry(RegistryKeys.BIOME, ModBiomes::bootstrap);

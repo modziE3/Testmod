@@ -12,6 +12,7 @@ public class ModTags {
     public static class Blocks {
 
         public static final TagKey<Block> REGOLITH = createTag("regolith");
+        public static final TagKey<Block> MOON_CARVER_REPLACEABLES = createTag("moon_carver_replaceables");
         public static final TagKey<Block> BASE_STONE_MOON = createTag("base_stone_moon");
 
         private static TagKey<Block> createTag(String name) {

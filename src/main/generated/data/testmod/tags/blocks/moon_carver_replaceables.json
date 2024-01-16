@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:smooth_basalt",
+    "minecraft:basalt",
+    "minecraft:water",
+    "minecraft:tuff",
+    "testmod:anorthosite",
+    "testmod:lunar_silt_block",
+    "testmod:lunar_silt"
+  ]
+}

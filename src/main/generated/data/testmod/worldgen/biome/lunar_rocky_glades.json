@@ -1,9 +1,9 @@
 {
   "carvers": {
     "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
-      "minecraft:canyon"
+      "testmod:moon_cave",
+      "testmod:moon_cave",
+      "testmod:moon_cave"
     ]
   },
   "downfall": 0.0,

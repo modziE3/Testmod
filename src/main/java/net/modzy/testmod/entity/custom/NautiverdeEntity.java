@@ -216,14 +216,6 @@ public class NautiverdeEntity
         }
         return super.damage(source, amount);
     }
-
-    public float initModelSize() {
-        int seed = this.getUuid().toString().hashCode();
-        Random random = new Random(seed);
-        float min = 0.8f;
-        float max = 1.2f;
-        return min + (max - min) * ((float) random.nextDouble());
-    }
     //endregion
 
     //region MOVEMENT
