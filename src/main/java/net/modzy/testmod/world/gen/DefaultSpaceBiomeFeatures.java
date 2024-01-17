@@ -15,7 +15,7 @@ public class DefaultSpaceBiomeFeatures {
         builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
         builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
         builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
-        builder.feature(GenerationStep.Feature.LAKES, ModPlacedFeatures.FROZEN_LAKE_PLACED_KEY);
+        builder.feature(GenerationStep.Feature.LAKES, ModPlacedFeatures.LUNAR_FROZEN_LAKE_PLACED_KEY);
     }
 
     public static void addMoonMineables(GenerationSettings.LookupBackedBuilder builder) {

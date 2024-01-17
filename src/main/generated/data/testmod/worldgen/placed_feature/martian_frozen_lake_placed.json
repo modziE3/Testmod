@@ -1,0 +1,8 @@
+{
+  "feature": "testmod:martian_frozen_lake",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

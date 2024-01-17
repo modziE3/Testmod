@@ -19,7 +19,9 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> BASALT_BOULDER_PLACED_KEY = registerKey("basalt_boulder_placed");
     public static final RegistryKey<PlacedFeature> ANORTHOSITE_BOULDER_PLACED_KEY = registerKey("anorthosite_boulder_placed");
     public static final RegistryKey<PlacedFeature> LUNAR_DUST_LAYER_PLACED_KEY = registerKey("lunar_dust_layer_placed");
-    public static final RegistryKey<PlacedFeature> FROZEN_LAKE_PLACED_KEY = registerKey("frozen_lake_placed");
+    public static final RegistryKey<PlacedFeature> MARTIAN_DUST_LAYER_PLACED_KEY = registerKey("martian_dust_layer_placed");
+    public static final RegistryKey<PlacedFeature> LUNAR_FROZEN_LAKE_PLACED_KEY = registerKey("lunar_frozen_lake_placed");
+    public static final RegistryKey<PlacedFeature> MARTIAN_FROZEN_LAKE_PLACED_KEY = registerKey("martian_frozen_lake_placed");
     public static final RegistryKey<PlacedFeature> ORE_MOON_TUFF_KEY = registerKey("ore_moon_tuff");
     public static final RegistryKey<PlacedFeature> ORE_MOON_ANORTHOSITE_KEY = registerKey("ore_moon_anorthosite");
 
@@ -30,10 +32,14 @@ public class ModPlacedFeatures {
                 CountPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
         register(context, ANORTHOSITE_BOULDER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.ANORTHOSITE_BOULDER_KEY),
                 CountPlacementModifier.of(1), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
-
         register(context, LUNAR_DUST_LAYER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_DUST_LAYER_KEY),
                 BiomePlacementModifier.of());
-        register(context, FROZEN_LAKE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_FROZEN_LAKE_KEY),
+        register(context, MARTIAN_DUST_LAYER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.MARTIAN_DUST_LAYER_KEY),
+                BiomePlacementModifier.of());
+
+        register(context, LUNAR_FROZEN_LAKE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_FROZEN_LAKE_KEY),
+                BiomePlacementModifier.of());
+        register(context, MARTIAN_FROZEN_LAKE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.MARTIAN_FROZEN_LAKE_KEY),
                 BiomePlacementModifier.of());
 
         register(context, ORE_MOON_TUFF_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.ORE_MOON_TUFF),

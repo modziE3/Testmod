@@ -15,7 +15,7 @@ import net.modzy.testmod.world.gen.feature.DustTopLayerFeature;
 
 public abstract class ModFeatures {
 
-    public static final Feature<SingleStateFeatureConfig> DUST_TOP_LAYER = registerFeature("lunar_dust_top_layer",
+    public static final Feature<SingleStateFeatureConfig> DUST_TOP_LAYER = registerFeature("dust_top_layer",
             new DustTopLayerFeature(SingleStateFeatureConfig.CODEC));
     public static final Feature<SingleStateFeatureConfig> BOULDER = registerFeature("basalt_boulder",
             new BoulderFeature(SingleStateFeatureConfig.CODEC));

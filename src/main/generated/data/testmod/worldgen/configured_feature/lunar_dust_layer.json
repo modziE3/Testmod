@@ -1,5 +1,5 @@
 {
-  "type": "testmod:lunar_dust_top_layer",
+  "type": "testmod:dust_top_layer",
   "config": {
     "state": {
       "Name": "testmod:lunar_silt",

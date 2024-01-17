@@ -11,6 +11,7 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.world.gen.ModFeatures;
 import org.jetbrains.annotations.NotNull;
 
