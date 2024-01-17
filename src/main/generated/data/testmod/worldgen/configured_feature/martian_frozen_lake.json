@@ -1,0 +1,14 @@
+{
+  "type": "testmod:frozen_lake_feature",
+  "config": {
+    "dust": {
+      "Name": "testmod:martian_silt",
+      "Properties": {
+        "layers": "1"
+      }
+    },
+    "ground": {
+      "Name": "testmod:martian_silt_block"
+    }
+  }
+}

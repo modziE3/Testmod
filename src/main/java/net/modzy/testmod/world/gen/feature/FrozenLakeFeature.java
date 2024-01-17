@@ -1,6 +1,7 @@
 package net.modzy.testmod.world.gen.feature;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -8,48 +9,47 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.modzy.testmod.block.ModBlocks;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FrozenLakeFeature extends Feature<DefaultFeatureConfig> {
-    public static final List<BlockState> WATERS = Arrays.stream(new BlockState[]{Blocks.WATER.getDefaultState(), Blocks.ICE.getDefaultState(), Blocks.PACKED_ICE.getDefaultState(), Blocks.PACKED_ICE.getDefaultState()}).toList();
+public class FrozenLakeFeature extends Feature<FrozenLakeFeature.Config> {
+    public static final List<BlockState> WATERS = Arrays.stream(new BlockState[]{Blocks.WATER.getDefaultState(), Blocks.ICE.getDefaultState(), Blocks.PACKED_ICE.getDefaultState(), Blocks.BLUE_ICE.getDefaultState()}).toList();
+    public static final List<Integer> LEVELS = Arrays.stream(new Integer[]{50,60,70,80,120,130,140,150}).toList();
 
-    public FrozenLakeFeature(Codec<DefaultFeatureConfig> codec) {
+    public FrozenLakeFeature(Codec<FrozenLakeFeature.Config> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(@NotNull FeatureContext<DefaultFeatureConfig> context) {
+    public boolean generate(@NotNull FeatureContext<FrozenLakeFeature.Config> context) {
         Random random = context.getRandom();
         StructureWorldAccess structureWorldAccess = context.getWorld();
         BlockPos blockPos = context.getOrigin();
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
         int k = blockPos.getX()+8;
         int l = blockPos.getZ()+8;
-        int m = structureWorldAccess.getTopY(Heightmap.Type.MOTION_BLOCKING, k, l); if (m != 130) return false;
+        int m = structureWorldAccess.getTopY(Heightmap.Type.MOTION_BLOCKING, k, l); if (!LEVELS.contains(m)) return false;
         if (!isFlat(structureWorldAccess, k, m, l)) return false;
+        FrozenLakeFeature.Config frozenLakeFeatureConfig = context.getConfig();
         double[] structureShape = getShape(random);
         double lakeSize = getLakeSize(random, 16, 12);
-        constructTable(structureWorldAccess, new int[]{k, m, l}, structureShape, lakeSize);
-        constructWaterBowl(structureWorldAccess, new int[]{k, m, l}, random, structureShape, lakeSize);
-
-        mutable.set(k, m+1, l);
-        structureWorldAccess.setBlockState(mutable, Blocks.LIME_CONCRETE.getDefaultState(), Block.NOTIFY_NEIGHBORS);
+        constructTable(structureWorldAccess, new int[]{k, m, l}, structureShape, lakeSize, frozenLakeFeatureConfig.ground());
+        constructWaterBowl(structureWorldAccess, new int[]{k, m, l}, random, structureShape, lakeSize, frozenLakeFeatureConfig.dust());
         return true;
     }
 
-    public static double getLakeSize(Random random, int max_size, int min_size) {
+    public static double getLakeSize(@NotNull Random random, int max_size, int min_size) {
         return (random.nextDouble() * (max_size - min_size)) + min_size;
     }
 
-    public static void constructWaterBowl(StructureWorldAccess structureWorldAccess, int @NotNull [] cent_pos, Random random, double[] shape, double size) {
+    public static void constructWaterBowl(StructureWorldAccess structureWorldAccess, int @NotNull [] cent_pos, Random random, double[] shape, double size, BlockState dustState) {
         int X = cent_pos[0]; int Y = cent_pos[1]; int Z = cent_pos[2];
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         ArrayList<ArrayList<int[]>> lakeLayers = lakeLayerGetter(random, 10, 7, shape, size);
@@ -63,22 +63,25 @@ public class FrozenLakeFeature extends Feature<DefaultFeatureConfig> {
                 mutable.set(X + block[0], Y - 2, Z + block[1]);
                 if (!WATERS.contains(structureWorldAccess.getBlockState(mutable))) {
                     structureWorldAccess.setBlockState(mutable, Blocks.MUD.getDefaultState(), Block.NOTIFY_NEIGHBORS);}} Y--;}
-        for (int[] block1 : lakeLayers.get(0)) {
-            LunarDustTopLayerFeature.placeDust(structureWorldAccess, new int[]{block1[0] + cent_pos[0], cent_pos[1] + 1, block1[1] + cent_pos[2]});}
+        for (int[] block1 : getLayer(23, shape)) {
+            int x = block1[0] + cent_pos[0];
+            int z = block1[1] + cent_pos[2];
+            int y = structureWorldAccess.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z);
+            DustTopLayerFeature.placeDust(structureWorldAccess, new int[]{x, y, z}, dustState);}
     }
 
-    public static void constructTable(StructureWorldAccess structureWorldAccess, int @NotNull [] cent_pos, double[] shape, double size) {
+    public static void constructTable(StructureWorldAccess structureWorldAccess, int @NotNull [] cent_pos, double[] shape, double size, BlockState groundState) {
         int X = cent_pos[0]; int Y = cent_pos[1]; int Z = cent_pos[2]; int offset = -3;
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (int i = 0 ; i <= 4 ; i++) {
-            ArrayList<int[]> layer = blockArraySubtract(getLayer(24 - i, shape), getLayer(size, shape));
+            ArrayList<int[]> layer = blockArraySubtract(getLayer(23 - i, shape), getLayer(size, shape));
             for (int[] block : layer) {
                 mutable.set(X + block[0], Y+offset, Z + block[1]);
                 if (!WATERS.contains(structureWorldAccess.getBlockState(mutable)) && structureWorldAccess.getBlockState(mutable) != Blocks.MUD.getDefaultState()) {
-                    structureWorldAccess.setBlockState(mutable, ModBlocks.LUNAR_SILT_BLOCK.getDefaultState(),  Block.NOTIFY_NEIGHBORS);}}offset++;}
+                    structureWorldAccess.setBlockState(mutable, groundState,  Block.NOTIFY_NEIGHBORS);}}offset++;}
     }
 
-    public static ArrayList<int[]> blockArraySubtract(ArrayList<int[]> array_1, ArrayList<int[]> array_2) {
+    public static @NotNull ArrayList<int[]> blockArraySubtract(@NotNull ArrayList<int[]> array_1, ArrayList<int[]> array_2) {
         ArrayList<int[]> Array = new ArrayList<>();
         for (int[] pos : array_1) {
             if (!containsBlockPos(array_2, pos)) {
@@ -86,7 +89,8 @@ public class FrozenLakeFeature extends Feature<DefaultFeatureConfig> {
         return Array;
     }
 
-    public static <T> boolean containsBlockPos(ArrayList<int[]> array, int[] pos) {
+    @Contract(pure = true)
+    public static boolean containsBlockPos(@NotNull ArrayList<int[]> array, int[] pos) {
         for (int[] list_pos : array) {
             if (list_pos[0] == pos[0] & list_pos[1] == pos[1]) return true;
         } return false;
@@ -125,7 +129,7 @@ public class FrozenLakeFeature extends Feature<DefaultFeatureConfig> {
         return numbers.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
-    public static ArrayList<int[]> getLayer(double size, double[] shape) {
+    public static @NotNull ArrayList<int[]> getLayer(double size, double[] shape) {
         ArrayList<int[]> layer = new ArrayList<>();
         for (int x = -32 ; x <= 32 ; x++) {
             for (int y = -32 ; y <= 32 ; y++) {
@@ -159,5 +163,22 @@ public class FrozenLakeFeature extends Feature<DefaultFeatureConfig> {
         for (int z = -24 ; z <= 24 ; z++){
             if (Math.abs(structureWorldAccess.getTopY(Heightmap.Type.MOTION_BLOCKING, cent_X, z + cent_Z) - cent_Y) >= 4) return false;}
         return true;
+    }
+
+    public record Config(BlockState ground, BlockState dust) implements FeatureConfig {
+        public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("ground").forGetter(Config::ground), BlockState.CODEC.fieldOf("dust").forGetter(Config::dust)).apply(instance, Config::new));
+
+        public Config(BlockState ground, BlockState dust) {
+            this.ground = ground;
+            this.dust = dust;
+        }
+
+        public BlockState ground() {
+            return this.ground;
+        }
+
+        public BlockState dust() {
+            return this.dust;
+        }
     }
 }

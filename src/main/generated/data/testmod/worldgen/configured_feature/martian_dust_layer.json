@@ -2,7 +2,7 @@
   "type": "testmod:lunar_dust_top_layer",
   "config": {
     "state": {
-      "Name": "testmod:lunar_silt",
+      "Name": "testmod:martian_silt",
       "Properties": {
         "layers": "1"
       }

@@ -33,7 +33,7 @@ public class ModPlacedFeatures {
 
         register(context, LUNAR_DUST_LAYER_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_DUST_LAYER_KEY),
                 BiomePlacementModifier.of());
-        register(context, FROZEN_LAKE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.FROZEN_LAKE_KEY),
+        register(context, FROZEN_LAKE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.LUNAR_FROZEN_LAKE_KEY),
                 BiomePlacementModifier.of());
 
         register(context, ORE_MOON_TUFF_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.ORE_MOON_TUFF),

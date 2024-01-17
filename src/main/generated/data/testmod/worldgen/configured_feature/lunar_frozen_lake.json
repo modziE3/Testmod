@@ -1,0 +1,14 @@
+{
+  "type": "testmod:frozen_lake_feature",
+  "config": {
+    "dust": {
+      "Name": "testmod:lunar_silt",
+      "Properties": {
+        "layers": "1"
+      }
+    },
+    "ground": {
+      "Name": "testmod:lunar_silt_block"
+    }
+  }
+}
