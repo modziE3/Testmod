@@ -28,7 +28,7 @@
     "lava_level": {
       "above_bottom": 8
     },
-    "probability": 0.03,
+    "probability": 0.01,
     "replaceable": "#testmod:moon_carver_replaceables",
     "shape": {
       "distance_factor": {

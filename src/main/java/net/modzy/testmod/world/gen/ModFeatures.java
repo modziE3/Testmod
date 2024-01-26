@@ -17,7 +17,7 @@ public abstract class ModFeatures {
 
     public static final Feature<SingleStateFeatureConfig> DUST_TOP_LAYER = registerFeature("dust_top_layer",
             new DustTopLayerFeature(SingleStateFeatureConfig.CODEC));
-    public static final Feature<SingleStateFeatureConfig> BOULDER = registerFeature("basalt_boulder",
+    public static final Feature<SingleStateFeatureConfig> BOULDER = registerFeature("boulder",
             new BoulderFeature(SingleStateFeatureConfig.CODEC));
     public static final Feature<FrozenLakeFeature.Config> FROZEN_LAKE_FEATURE = registerFeature("frozen_lake_feature",
             new FrozenLakeFeature(FrozenLakeFeature.Config.CODEC));

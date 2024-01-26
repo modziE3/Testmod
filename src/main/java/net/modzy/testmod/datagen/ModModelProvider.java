@@ -39,6 +39,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.TOPAZ_LEGGINGS, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.NAUTIVERDE_SHELL, Models.GENERATED);
+        itemModelGenerator.register(ModItems.ALOE_VERA_SUN_CREAM, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.MIRANDA_SPAWN_EGG,
                 new Model(Optional.of(new Identifier("item/template_spawn_egg")), Optional.empty()));

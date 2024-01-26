@@ -1,5 +1,7 @@
 package net.modzy.testmod.world.biome;
 
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -11,6 +13,7 @@ import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.modzy.testmod.Testmod;
+import net.modzy.testmod.entity.ModEntities;
 import net.modzy.testmod.world.gen.DefaultSpaceBiomeFeatures;
 
 public class ModBiomes {
@@ -43,7 +46,7 @@ public class ModBiomes {
 
     public static Biome lunarRockyGlades(Registerable<Biome> context) {
         SpawnSettings.Builder spawnBuilder = new SpawnSettings.Builder();
-        //spawnBuilder.spawn(SpawnGroup.UNDERGROUND_WATER_CREATURE, new SpawnSettings.SpawnEntry(ModEntities.NAUTIVERDE, 2, 3, 5));
+        spawnBuilder.spawn(SpawnGroup.WATER_AMBIENT, new SpawnSettings.SpawnEntry(ModEntities.NAUTIVERDE, 2, 1, 3));
         //spawnBuilder.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.WOLF, 5, 4, 4));
         //DefaultBiomeFeatures.addFarmAnimals(spawnBuilder);
         //DefaultBiomeFeatures.addBatsAndMonsters(spawnBuilder);
@@ -64,7 +67,7 @@ public class ModBiomes {
         return new Biome.Builder()
                 .precipitation(false)
                 .downfall(0)
-                .temperature(0.0f)
+                .temperature(1.0f)
                 .generationSettings(biomeBuilder.build())
                 .spawnSettings(spawnBuilder.build())
                 .effects((new BiomeEffects.Builder())

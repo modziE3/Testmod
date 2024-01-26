@@ -9,6 +9,8 @@ import net.minecraft.world.gen.surfacebuilder.MaterialRules;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 import net.modzy.testmod.block.ModBlocks;
+import net.modzy.testmod.client.render.dimension.ModDimensionEffects;
+import net.modzy.testmod.client.render.dimension.MoonDimensionEffects;
 import net.modzy.testmod.entity.ModEntities;
 import net.modzy.testmod.entity.custom.MirandaEntity;
 import net.modzy.testmod.entity.custom.NautiverdeEntity;
@@ -16,6 +18,7 @@ import net.modzy.testmod.item.ModItemGroups;
 import net.modzy.testmod.item.ModItems;
 import net.modzy.testmod.networking.ModPackets;
 import net.modzy.testmod.sound.ModSounds;
+import net.modzy.testmod.util.ModCommands;
 import net.modzy.testmod.util.ModTags;
 import net.modzy.testmod.world.dimension.ModDimensions;
 import net.modzy.testmod.world.gen.ModFeatures;
@@ -37,6 +40,7 @@ public class Testmod implements ModInitializer {
 		ModEntities.registerModEntities();
 		ModSounds.registerSounds();
 		ModFeatures.registerModFeatures();
+		ModCommands.registerCommands();
 
 		FabricDefaultAttributeRegistry.register(ModEntities.MIRANDA, MirandaEntity.createMirandaAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.NAUTIVERDE, NautiverdeEntity.createNautiverdeAttributes());

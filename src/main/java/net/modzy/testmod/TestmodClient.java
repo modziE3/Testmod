@@ -3,6 +3,7 @@ package net.modzy.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.modzy.testmod.client.render.dimension.ModDimensionEffects;
 import net.modzy.testmod.entity.ModEntities;
 import net.modzy.testmod.entity.client.*;
 import net.modzy.testmod.networking.ModPackets;
@@ -10,7 +11,7 @@ import net.modzy.testmod.networking.ModPackets;
 public class TestmodClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-
+        ModDimensionEffects.registerDimensionEffects();
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.MIRANDA, MirandaModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.MIRANDA, MirandaRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.NAUTIVERDE, NautiverdeModel::getTexturedModelData);

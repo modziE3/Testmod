@@ -2,8 +2,8 @@
   "carvers": {
     "air": [
       "testmod:moon_cave",
-      "testmod:moon_cave",
-      "testmod:moon_cave"
+      "testmod:moon_canyon",
+      "testmod:moon_cave_extra_underground"
     ]
   },
   "downfall": 0.0,
@@ -51,8 +51,15 @@
     "misc": [],
     "monster": [],
     "underground_water_creature": [],
-    "water_ambient": [],
+    "water_ambient": [
+      {
+        "type": "testmod:nautiverde",
+        "maxCount": 3,
+        "minCount": 1,
+        "weight": 2
+      }
+    ],
     "water_creature": []
   },
-  "temperature": 0.0
+  "temperature": 1.0
 }

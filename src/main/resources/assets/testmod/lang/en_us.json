@@ -9,6 +9,8 @@
   "item.testmod.topaz_leggings": "Topaz Leggings",
   "item.testmod.topaz_boots": "Topaz Boots",
 
+  "item.testmod.aloe_sun_cream": "Aloe Suncream",
+
   "block.testmod.topaz_block": "Block of Topaz",
   "block.testmod.martian_silt_block": "Martian Silt",
   "block.testmod.martian_silt": "Martian Dust Pile",
@@ -21,6 +23,13 @@
   "itemgroup.animal_group": "Animal Items",
   "itemgroup.topaz": "Topaz Items",
   "itemgroup.terrain_blocks_group": "Terrain Blocks",
+
+  "commands.spaceteleport.error.cannot_locate_planet_or_moon": "Cannot locate this as a planet, moon or dimension",
+  "commands.spaceteleport.error.already_in_dimension": "You are already here!",
+  "commands.spaceteleport.feedback.single": "Teleported to %s",
+  "commands.spaceteleport.error.entity": "Invalid entity",
+  "commands.spaceteleport.feedback.multiple": "Teleported %s entities to %s",
+  "commands.spaceteleport.feedback.pos": "Teleported to %s at (%d, %d, %d)",
 
   "entity.testmod.nautiverde": "Nautiverde",
   "entity.testmod.miranda": "Paradise Duck",

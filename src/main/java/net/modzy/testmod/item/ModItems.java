@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.*;
-import net.minecraft.item.Items;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -35,6 +34,9 @@ public class ModItems {
     public static final Item TOPAZ_BOOTS = registerItem("topaz_boots",
             new ArmorItem(ModArmorMaterials.TOPAZ, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
+
+    public static final Item ALOE_VERA_SUN_CREAM = registerItem("aloe_sun_cream",
+            new SunCreamItem(SunCreamMaterials.ALOEVERA, new DamageStackItemSettings().maxCount(16)));
 
 
     public static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {

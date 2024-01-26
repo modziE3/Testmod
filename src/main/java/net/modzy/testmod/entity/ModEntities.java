@@ -4,9 +4,11 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.Heightmap;
 import net.modzy.testmod.Testmod;
 import net.modzy.testmod.entity.custom.MirandaEntity;
 import net.modzy.testmod.entity.custom.NautiverdeEntity;
@@ -24,6 +26,8 @@ public class ModEntities {
 
     public static final EntityType<NautiverdeEntity> NAUTIVERDE = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(Testmod.MOD_ID, "nautiverde"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, NautiverdeEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.8f, 0.8f)).build());
+            FabricEntityTypeBuilder.createMob().spawnRestriction(SpawnRestriction.Location.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, NautiverdeEntity::canSpawn)
+                    .entityFactory(NautiverdeEntity::new).dimensions(EntityDimensions.fixed(0.8f, 0.8f)).spawnGroup(SpawnGroup.UNDERGROUND_WATER_CREATURE).build());
+
+
 }

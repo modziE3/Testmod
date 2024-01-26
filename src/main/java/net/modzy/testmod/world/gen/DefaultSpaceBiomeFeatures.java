@@ -11,10 +11,17 @@ public class DefaultSpaceBiomeFeatures {
         builder.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, ModPlacedFeatures.ANORTHOSITE_BOULDER_PLACED_KEY);
     }
 
+    public static void addMarsLandCarvers(GenerationSettings.LookupBackedBuilder builder) { // Not done
+        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);// get Mars caves
+        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CANYON);// get Mars caves
+        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE_EXTRA_UNDERGROUND);// get Mars caves
+        builder.feature(GenerationStep.Feature.LAKES, ModPlacedFeatures.MARTIAN_FROZEN_LAKE_PLACED_KEY);
+    }
+
     public static void addMoonLandCarvers(GenerationSettings.LookupBackedBuilder builder) {
         builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
-        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
-        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE);
+        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CANYON);
+        builder.carver(GenerationStep.Carver.AIR, ModConfiguredCarvers.MOON_CAVE_EXTRA_UNDERGROUND);
         builder.feature(GenerationStep.Feature.LAKES, ModPlacedFeatures.LUNAR_FROZEN_LAKE_PLACED_KEY);
     }
 
