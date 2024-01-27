@@ -10,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
+import net.modzy.testmod.block.ModBlocks;
 import net.modzy.testmod.entity.ModEntities;
 
 public class ModItems {
@@ -34,7 +35,8 @@ public class ModItems {
     public static final Item TOPAZ_BOOTS = registerItem("topaz_boots",
             new ArmorItem(ModArmorMaterials.TOPAZ, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
-
+    public static final Item ALOE_VERA = registerItem("aloe_vera",
+            new AliasedBlockItem(ModBlocks.ALOE_VERA_CROP, new FabricItemSettings().food(ModFoodComponents.ALOE_VERA)));
     public static final Item ALOE_VERA_SUN_CREAM = registerItem("aloe_sun_cream",
             new SunCreamItem(SunCreamMaterials.ALOEVERA, new DamageStackItemSettings().maxCount(16)));
 

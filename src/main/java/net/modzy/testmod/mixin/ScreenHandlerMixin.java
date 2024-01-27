@@ -112,13 +112,14 @@ public abstract class ScreenHandlerMixin {
                                                             int m = Math.min(itemStack22.getMaxCount(), slot2.getMaxItemCount(itemStack22));
                                                             int n = Math.min(ScreenHandler.calculateStackSize(this.quickCraftSlots, this.quickCraftButton, itemStack22) + l, m);
                                                             k -= n - l;
+                                                            slot2.setStack(DamageStacksUtil.combineDamageStack(itemStack22, slot2.getStack(), n));
                                                             if (!removed) {
-                                                                slot2.setStack(itemStack22.copyWithCount(n));
+                                                                DamageStacksUtil.setStackWithDamage(itemStack22, 0);
                                                                 removed = true;
-                                                            } else slot2.setStack(DamageStacksUtil.getStackWithDamage(itemStack22.copyWithCount(n), 0));
+                                                            }
                                                         }
                                                         itemStack22.setCount(k);
-                                                        this.setCursorStack(DamageStacksUtil.getStackWithDamage(itemStack22, 0));
+                                                        this.setCursorStack(itemStack22);
                                                     }
                                                     this.endQuickCraft();
                                                 } else {

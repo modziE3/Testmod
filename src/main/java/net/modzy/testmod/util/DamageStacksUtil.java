@@ -33,4 +33,18 @@ public class DamageStacksUtil {
             newStack.setDamage(damage);
         } return newStack;
     }
+
+    public static void setStackWithDamage(ItemStack stack, int damage) {
+        if (isDamageStack(stack)) {stack.setDamage(damage);}
+    }
+
+    public static ItemStack combineDamageStack(ItemStack stack, ItemStack otherStack, int amount) {
+        ItemStack newStack = stack.copy();
+        if (!isSameItemDamageStack(stack, otherStack)) {newStack.setCount(amount); return newStack;}
+        int damage = stack.getDamage() + otherStack.getDamage();
+        int count = amount - (damage / stack.getMaxDamage());
+        newStack.setDamage(damage % stack.getMaxDamage());
+        newStack.setCount(count);
+        return newStack;
+    }
 }

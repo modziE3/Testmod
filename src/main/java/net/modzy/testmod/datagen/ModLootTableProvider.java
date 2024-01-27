@@ -6,8 +6,10 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLootTableProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataWriter;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.block.ModBlocks;
+import net.modzy.testmod.block.custom.AloeVeraBlock;
 import net.modzy.testmod.entity.ModEntities;
 import net.modzy.testmod.item.ModItems;
 
@@ -26,7 +28,6 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.POLISHED_ANORTHOSITE);
         addDrop(ModBlocks.MARTIAN_SILT_BLOCK);
         addDrop(ModBlocks.MUD_HYDROTHERMAL_VENT, Blocks.MUD);
-
     }
 }
 

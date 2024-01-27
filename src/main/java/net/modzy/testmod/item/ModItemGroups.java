@@ -37,6 +37,8 @@ public class ModItemGroups {
                         entries.add(ModItems.NAUTIVERDE_SPAWN_EGG);
                         entries.add(ModItems.NAUTIVERDE_SHELL);
                         entries.add(Items.NAUTILUS_SHELL);
+                        entries.add(ModItems.ALOE_VERA);
+                        entries.add(ModItems.ALOE_VERA_SUN_CREAM);
 
                     }).build());
 

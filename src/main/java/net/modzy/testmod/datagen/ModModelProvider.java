@@ -8,6 +8,7 @@ import net.minecraft.data.client.*;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.block.ModBlocks;
+import net.modzy.testmod.block.custom.AloeVeraBlock;
 import net.modzy.testmod.item.ModItems;
 
 import java.util.Optional;
@@ -27,6 +28,8 @@ public class ModModelProvider extends FabricModelProvider {
         // Customs
         registerDustTypeBlock(blockStateModelGenerator, ModBlocks.MARTIAN_SILT_BLOCK, ModBlocks.MARTIAN_SILT);
         registerDustTypeBlock(blockStateModelGenerator, ModBlocks.LUNAR_SILT_BLOCK, ModBlocks.LUNAR_SILT);
+
+        blockStateModelGenerator.registerCrop(ModBlocks.ALOE_VERA_CROP, AloeVeraBlock.AGE, 0,1,2,3,4,5,6,7);
 
     }
 

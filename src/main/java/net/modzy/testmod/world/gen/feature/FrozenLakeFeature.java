@@ -97,7 +97,7 @@ public class FrozenLakeFeature extends Feature<FrozenLakeFeature.Config> {
     }
 
     public static int randomSign(@NotNull Random random) {
-        if (random.nextBoolean()) return 1; else return -1;
+        return random.nextBoolean() ? 1 : -1;
     }
 
     public static double lakeShapeExpression(double var1, double var2, double size, double hori, double sque, double vert, double squi) {

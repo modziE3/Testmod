@@ -12,6 +12,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.modzy.testmod.Testmod;
+import net.modzy.testmod.block.custom.AloeVeraBlock;
 import net.modzy.testmod.block.custom.DustBlock;
 import net.modzy.testmod.block.custom.GeothermalVentBlock;
 import net.modzy.testmod.sound.ModSounds;
@@ -29,6 +30,7 @@ public class ModBlocks {
 
     public static final Block MUD_HYDROTHERMAL_VENT = registerBlock("mud_hydrothermal_vent", new GeothermalVentBlock(AbstractBlock.Settings.copy(Blocks.DIRT).mapColor(MapColor.TERRACOTTA_CYAN).allowsSpawning(Blocks::always).solidBlock(Blocks::always).blockVision(Blocks::always).suffocates(Blocks::always).sounds(BlockSoundGroup.MUD).luminance(state -> 9)));
 
+    public static final Block ALOE_VERA_CROP = Registry.register(Registries.BLOCK, new Identifier(Testmod.MOD_ID, "aloe"), new AloeVeraBlock(FabricBlockSettings.copyOf(Blocks.WHEAT).sounds(BlockSoundGroup.AZALEA)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
