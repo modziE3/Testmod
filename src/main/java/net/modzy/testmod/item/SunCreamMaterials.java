@@ -4,7 +4,9 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
 public enum SunCreamMaterials implements SunCreamMaterial {
-    ALOEVERA(100, 100, SoundEvents.ITEM_HONEYCOMB_WAX_ON);
+    ALOEVERA(100, 100, SoundEvents.ITEM_HONEYCOMB_WAX_ON),
+    COCOZINC(250, 150, SoundEvents.ITEM_HONEYCOMB_WAX_ON),
+    BLUEGOOP(500, 200, SoundEvents.ITEM_HONEYCOMB_WAX_ON);
 
     private final int durability;
     private final int protection;
